@@ -24,10 +24,11 @@ dependencies:
   flutter:
     sdk: flutter
   adobe_xd: ^0.1.0
-#  firebase_auth: ^0.16.1
   google_maps_flutter: ^0.5.28+1
-#  geolocation: ^1.1.2
+  image_picker:
   geolocator:
+  geocoder: ^0.2.1
+  font_awesome_flutter: ^8.8.1
   location: ^3.0.2
   provider:
   http:

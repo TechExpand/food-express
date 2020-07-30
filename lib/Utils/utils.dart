@@ -1,169 +1,45 @@
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:flutter/foundation.dart';
-//
-//class Utils with ChangeNotifier{
-//  updatemarker() {
-//    for (var latlog in data) {
-//      marker.add(Marker(
-//        markerId: MarkerId(latlog['user'].toString()),
-//        position: LatLng(double.parse(latlog['Lan'].toString()),
-//            double.parse(latlog['Log'].toString())),
-//        infoWindow: InfoWindow(
-//          title: "User Current Adress",
-//        ),
-//      ));
-//        bodywidget();
-//      print(latlog['user']);
-//      notifyListeners();
-//    }
-//  }
-//
+import 'dart:io';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+
+class Utils with ChangeNotifier{
+
+  File selected_image;
+  File selected_menu_image1;
+  File selected_menu_image2;
+  File selected_menu_image3;
+
+  Future selectimage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    selected_image = image;
+      notifyListeners();
+  }
 
 
 
 
+  Future selectimage1() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    selected_menu_image1 = image;
+    notifyListeners();
+  }
 
 
 
-//if (token["auth_token"].toString().length == 40) {
-//print('login');
-//Navigator.push(
-//context,
-//PageRouteBuilder(
-//pageBuilder: (context, animation, secondaryAnimation) {
-//return Map_vendor();
-//},
-//transitionsBuilder:
-//(context, animation, secondaryAnimation, child) {
-//return FadeTransition(
-//opacity: animation,
-//child: child,
-//);
-//},
-//),
-//);
-//} else {
-//Navigator.pop(context);
-//return showDialog(
-//context: context,
-//child: Dialog(
-//backgroundColor: Colors.black12,
-//child: Container(
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.all(Radius.circular(10))),
-//height: 70,
-//child: Center(
-//child: Text(
-//'Unable to log in with provided credentials',
-//style: TextStyle(
-//color: Colors.white,
-//fontWeight: FontWeight.bold,
-//),
-//),
-//),
-//),
-//),
-//);
-//}
+  Future selectimage2() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    selected_menu_image2 = image;
+    notifyListeners();
+  }
 
 
 
+  Future selectimage3() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    selected_menu_image3 = image;
+    notifyListeners();
+  }
 
-
-
-//if (token["auth_token"].toString().length == 40) {
-//Navigator.push(
-//context,
-//PageRouteBuilder(
-//pageBuilder: (context, animation, secondaryAnimation) {
-//return Map_user();
-//},
-//transitionsBuilder:
-//(context, animation, secondaryAnimation, child) {
-//return FadeTransition(
-//opacity: animation,
-//child: child,
-//);
-//},
-//),
-//);
-//}
-//
-//else {
-//Navigator.pop(context);
-//return showDialog(
-//context: context,
-//child: Dialog(
-//backgroundColor: Colors.black12,
-//child: Container(
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.all(Radius.circular(10))),
-//height: 70,
-//child: Center(
-//child: Text(
-//'Unable to log in with provided credentials',
-//style: TextStyle(
-//color: Colors.white,
-//fontWeight: FontWeight.bold,
-//),
-//),
-//),
-//),
-//),
-//);
-//}
-
-
-
-
-
-
-
-
-//if (signup_response.statusCode == 200 ||
-//signup_response.statusCode == 201) {
-//Navigator.pop(context);
-//Navigator.push(
-//context,
-//PageRouteBuilder(
-//pageBuilder: (context, animation, secondaryAnimation) {
-//return VENDORSIGNUP2();
-//},
-//transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//return FadeTransition(
-//opacity: animation,
-//child: child,
-//);
-//},
-//),
-//);
-//
-//
-//submit_location();
-//} else {
-//Navigator.pop(context);
-//return showDialog(
-//context: context,
-//child: Dialog(
-//backgroundColor: Colors.black12,
-//child: Container(
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.all(Radius.circular(10))),
-//height: 70,
-//child: Center(
-//child: Text(
-//'A user with that username already exists.',
-//style: TextStyle(
-//color: Colors.white,
-//fontWeight: FontWeight.bold,
-//),
-//),
-//),
-//),
-//),
-//);
-//}
-
-
-
-//}
+}

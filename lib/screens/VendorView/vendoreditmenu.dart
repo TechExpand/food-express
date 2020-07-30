@@ -1,204 +1,319 @@
-//import 'package:flutter/material.dart';
-//import 'dart:ui' as ui;
-//import 'package:flutter_svg/flutter_svg.dart';
-//
-//class vendoreditmenu extends StatelessWidget {
-//  vendoreditmenu({
-//    Key key,
-//  }) : super(key: key);
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      backgroundColor: const Color(0xffffffff),
-//      body: Stack(
-//        children: <Widget>[
-//          Transform.translate(
-//            offset: Offset(0.0, 42.0),
-//            child:
-//                // Adobe XD layer: 'Header' (group)
-//                Stack(
-//              children: <Widget>[
-//                Container(
-//                  width: 360.0,
-//                  height: 191.0,
-//                  decoration: BoxDecoration(
-//                    color: const Color(0xff2699fb),
-//                  ),
-//                ),
-//                Transform.translate(
-//                  offset: Offset(50.0, 55.41),
-//                  child:
-//                      // Adobe XD layer: 'Title' (group)
-//                      Stack(
-//                    children: <Widget>[
-//                      Transform.translate(
-//                        offset: Offset(14.0, 45.59),
-//                        child:
-//                            // Adobe XD layer: 'vendorDesc' (text)
-//                            SizedBox(
-//                          width: 260.0,
-//                          height: 43.0,
-//                          child: SingleChildScrollView(
-//                              child: Text(
-//                            'Ut labore et dolore roipi mana aliqua. Enim adeop minim veeniam nostruklad',
-//                            style: TextStyle(
-//                              fontFamily: 'Arial',
-//                              fontSize: 14,
-//                              color: const Color(0xffffffff),
-//                              height: 1.7142857142857142,
-//                            ),
-//                            textAlign: TextAlign.left,
-//                          )),
-//                        ),
-//                      ),
-//                      Transform.translate(
-//                        offset: Offset(0.0, 6.26),
-//                        child:
-//                            // Adobe XD layer: 'vendorName' (text)
-//                            SizedBox(
-//                          width: 260.0,
-//                          height: 45.0,
-//                          child: SingleChildScrollView(
-//                              child: Text(
-//                            'Vendor Name',
-//                            style: TextStyle(
-//                              fontFamily: 'Georgia',
-//                              fontSize: 40,
-//                              color: const Color(0xffffffff),
-//                              height: 1,
-//                            ),
-//                            textAlign: TextAlign.center,
-//                          )),
-//                        ),
-//                      ),
-//                    ],
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-//          Transform.translate(
-//            offset: Offset(38.0, 264.0),
-//            child: Text(
-//              'Menu Items',
-//              style: TextStyle(
-//                fontFamily: 'Arial',
-//                fontSize: 14,
-//                color: const Color(0xff2699fb),
-//              ),
-//              textAlign: TextAlign.left,
-//            ),
-//          ),
-//          // Adobe XD layer: 'menuListItem' (group)
-//          Stack(
-//            children: <Widget>[
-//              Transform.translate(
-//                offset: Offset(25.0, 311.0),
-//                child:
-//                    // Adobe XD layer: 'itemImage' (shape)
-//                    Container(
-//                  width: 112.0,
-//                  height: 112.0,
-//                  decoration: BoxDecoration(
-//                    borderRadius: BorderRadius.circular(10.0),
-//                    color: const Color(0xffbce0fd),
-//                  ),
-//                ),
-//              ),
-//              Transform.translate(
-//                offset: Offset(153.0, 305.0),
-//                child:
-//                    // Adobe XD layer: 'itemDesc' (text)
-//                    SizedBox(
-//                  width: 183.0,
-//                  height: 71.0,
-//                  child: SingleChildScrollView(
-//                      child: Text(
-//                    'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
-//                    style: TextStyle(
-//                      fontFamily: 'Arial',
-//                      fontSize: 14,
-//                      color: const Color(0xff2699fb),
-//                      height: 1.7142857142857142,
-//                    ),
-//                    textAlign: TextAlign.left,
-//                  )),
-//                ),
-//              ),
-//              Transform.translate(
-//                offset: Offset(153.0, 407.0),
-//                child:
-//                    // Adobe XD layer: 'itemPrice' (text)
-//                    Text(
-//                  '21\$',
-//                  style: TextStyle(
-//                    fontFamily: 'Arial',
-//                    fontSize: 14,
-//                    color: const Color(0xff2699fb),
-//                    fontWeight: FontWeight.w700,
-//                  ),
-//                  textAlign: TextAlign.left,
-//                ),
-//              ),
-//              Transform.translate(
-//                offset: Offset(307.0, 396.0),
-//                child: Text(
-//                  '…',
-//                  style: TextStyle(
-//                    fontFamily: 'Arial',
-//                    fontSize: 20,
-//                    color: const Color(0xff2699fb),
-//                    fontWeight: FontWeight.w700,
-//                  ),
-//                  textAlign: TextAlign.left,
-//                ),
-//              ),
-//            ],
-//          ),
-//          Transform.translate(
-//            offset: Offset(160.0, 506.0),
-//            child:
-//                // Adobe XD layer: 'addMenuItemButton' (group)
-//                Stack(
-//              children: <Widget>[
-//                Container(
-//                  width: 40.0,
-//                  height: 40.0,
-//                  decoration: BoxDecoration(
-//                    borderRadius:
-//                        BorderRadius.all(Radius.elliptical(20.0, 20.0)),
-//                    color: const Color(0xff2699fb),
-//                  ),
-//                ),
-//                Transform.translate(
-//                  offset: Offset(12.0, 12.0),
-//                  child:
-//                      // Adobe XD layer: '+' (group)
-//                      SvgPicture.string(
-//                    _shapeSVG_b85ebc0781344ffc82794494ac23e443,
-//                    allowDrawingOutsideViewBox: true,
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-//          Transform.translate(
-//            offset: Offset(131.0, 481.0),
-//            child: Text(
-//              'Add Menu Item ',
-//              style: TextStyle(
-//                fontFamily: 'Arial',
-//                fontSize: 14,
-//                color: const Color(0xff2699fb),
-//              ),
-//              textAlign: TextAlign.left,
-//            ),
-//          ),
-//        ],
-//      ),
-//    );
-//  }
-//}
-//
-//const String _shapeSVG_b85ebc0781344ffc82794494ac23e443 =
-//    '<svg viewBox="12.0 12.0 16.0 16.0" ><g transform="translate(12.0, 12.0)"><path transform="translate(4620.0, 0.0)" d="M -4613.00048828125 15.99948692321777 L -4613.00048828125 8.999783515930176 L -4620 8.999783515930176 L -4620 6.999702930450439 L -4613.00048828125 6.999702930450439 L -4613.00048828125 0 L -4611 0 L -4611 6.999702930450439 L -4604.00048828125 6.999702930450439 L -4604.00048828125 8.999783515930176 L -4611 8.999783515930176 L -4611 15.99948692321777 L -4613.00048828125 15.99948692321777 Z" fill="#ffffff" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></g></svg>';
+import 'package:flutter/material.dart';
+import 'package:foodtruckexpressxd/Services/Network.dart';
+import 'package:foodtruckexpressxd/Utils/utils.dart';
+import 'dart:ui' as ui;
+
+import 'package:provider/provider.dart';
+
+class vendoreditmenu extends StatefulWidget {
+  var snapshot_data;
+  var snapshot_profile_data;
+
+  vendoreditmenu({
+    this.snapshot_data,
+    this.snapshot_profile_data,
+  });
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return vendoreditmenustate();
+  }
+}
+
+class vendoreditmenustate extends State<vendoreditmenu> {
+  final _formkey = GlobalKey<FormState>();
+  var menu_description;
+  var menu_title;
+  var menu_price;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: const Color(0xffffffff),
+        body: SingleChildScrollView(child: Consumer2<WebServices, Utils>(
+            builder: (context, webservices_consumer, utils_consumer, child) {
+          return Form(
+            key: _formkey,
+            child: Column(
+              children: <Widget>[
+                Stack(
+//                  alignment: Alignment.center,
+                  children: <Widget>[
+                    // Adobe XD layer: 'background' (shape)
+                    Container(
+                      height: 191.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xff2699fb),
+                      ),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                            padding: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.width / 8,
+                                left: MediaQuery.of(context).size.width / 20),
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ))),
+                    Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 90.0, left: 8, right: 8),
+                            child: Text(
+                              'EDIT ITEMS',
+                              style: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14,
+                                color: const Color(0xffffffff),
+                                height: 1.7142857142857142,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: SizedBox(
+                          height: 45.0,
+                          child: Text(
+                            'FOODTRUCK.EXPRESS',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Arial',
+                              fontSize: 20,
+                              color: const Color(0xffffffff),
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 480,
+                    child: TextFormField(
+                      initialValue: widget.snapshot_data.menu_title,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Menu title is Required';
+                        } else {
+                          menu_title = value;
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Menu Title',
+                          labelStyle: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          icon: Icon(
+                            Icons.title,
+                            color: Colors.black87,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 480,
+                    child: TextFormField(
+                      initialValue: widget.snapshot_data.menu_description,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Menu Description is Required';
+                        } else {
+                          menu_description = value;
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Menu Description',
+                          labelStyle: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          icon: Icon(
+                            Icons.title,
+                            color: Colors.black87,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    width: 480,
+                    child: TextFormField(
+                      initialValue: widget.snapshot_data.menu_price.toString(),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Menu Price is Required';
+                        } else {
+                          menu_price = value;
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Menu Price',
+                          labelStyle: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold),
+                          icon: Icon(
+                            Icons.title,
+                            color: Colors.black87,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                    ),
+                  ),
+                ),
+                Divider(),
+                webservices_consumer.login_state == false
+                    ? RaisedButton(
+                        onPressed: () {
+                          if(_formkey.currentState.validate())
+                          webservices_consumer.Login_SetState();
+                          webservices_consumer.Update_Menu_Details(
+                            menu_description: menu_description,
+                            menu_price: menu_price,
+                            menu_title: menu_title,
+                            context: context,
+                            id: widget.snapshot_data.id,
+                          );
+                        },
+                        child: Text('Update Menu Details'))
+                    : CircularProgressIndicator(),
+                Divider(),
+                Text('Change Product Images'),
+                Divider(),
+                Container(
+                  width: 170,
+                  height: 170,
+                  child: utils_consumer.selected_menu_image1 == null
+                      ? Center(
+                    child: Text('No Image Selected'),
+                  )
+                      : Image.file(
+                          utils_consumer.selected_menu_image1,
+                          fit: BoxFit.contain,
+                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      onPressed: () {
+                        utils_consumer.selectimage1();
+                      },
+                      child: Text(
+                        'Select First Image',
+                        style: TextStyle(
+                            color: Colors.black87, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Container(
+                  width: 170,
+                  height: 170,
+                  child: utils_consumer.selected_menu_image2 == null
+                      ? Center(
+                    child: Text('No Image Selected'),
+                  )
+                      : Image.file(
+                          utils_consumer.selected_menu_image2,
+                          fit: BoxFit.contain,
+                        ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      onPressed: () {
+                        return utils_consumer.selectimage2();
+                      },
+                      child: Text(
+                        'Select Second Image',
+                        style: TextStyle(
+                            color: Colors.black87, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Container(
+                  width: 170,
+                  height: 170,
+                  child: utils_consumer.selected_menu_image3 == null
+                      ?Center(
+                    child: Text('No Image Selected'),
+                  )
+                      : Image.file(utils_consumer.selected_menu_image3),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: RaisedButton(
+                      onPressed: () {
+                        return utils_consumer.selectimage3();
+                      },
+                      child: Text(
+                        'Select Third Image',
+                        style: TextStyle(
+                            color: Colors.black87, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(),
+                webservices_consumer.login_state_second == false
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                      onPressed: () {
+                        webservices_consumer.Login_SetState_Second();
+                        webservices_consumer.Update_Menu_Images(
+                          image1: utils_consumer.selected_menu_image1.path,
+                          image2: utils_consumer.selected_menu_image2.path,
+                          image3: utils_consumer.selected_menu_image3.path,
+                          context: context,
+                          id: widget.snapshot_data.id,
+                        );
+                      },
+                      child: Text('Update Menu Images')),
+                    )
+                    : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(),
+                    ),
+              ],
+            ),
+          );
+        })));
+  }
+}

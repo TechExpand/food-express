@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:foodtruckexpressxd/Model/vendorprofile.dart';
 import 'package:foodtruckexpressxd/screens/VendorView/VendorMenuPage.dart';
+import 'package:provider/provider.dart';
 
 
 
@@ -19,16 +20,14 @@ class USERprofile extends StatefulWidget {
 }
 
 class USERprofilestate extends State<USERprofile> {
-
-  var web = new WebServices();
-
   @override
   Widget build(BuildContext context) {
+    var webservices = Provider.of<WebServices>(context, listen: false);
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
       body: FutureBuilder(
         initialData: Center(child: CircularProgressIndicator()),
-        future: web.User_Profile_Api(),
+        future: webservices.User_Profile_Api(),
         builder: (context, snapshot){
           if(snapshot.hasData){
             print(snapshot.data[0].id);
@@ -146,12 +145,7 @@ class USERprofilestate extends State<USERprofile> {
                               PageRouteBuilder(
                                 pageBuilder: (context, animation, secondaryAnimation) {
                                   return VENDORprofileEdith(
-                                    pro_pic: snapshot.data[0].pro_pic,
-                                    phone: snapshot.data[0].phone,
-                                    unique_detail: snapshot.data[0].unique_detail,
-                                    detail: snapshot.data[0].detail,
-                                    business_name: snapshot.data[0].business_name,
-
+                                    snapshot_profile_data: snapshot.data[0],
                                   );
                                 },
                                 transitionsBuilder: (context, animation, secondaryAnimation, child) {

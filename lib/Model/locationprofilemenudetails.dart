@@ -38,7 +38,7 @@ class LocationMenuDetail {
   int menu_price;
   String menu_picture1;
   String menu_picture2;
-  int menu_picture3;
+  String menu_picture3;
   int lanlog;
   int user;
 
@@ -53,15 +53,16 @@ class LocationMenuDetail {
       this.lanlog,
       this.user});
 
-  LocationMenuDetail.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    menu_title = json['menu_title'];
-    menu_description = json['menu_description'];
-    menu_price = json['menu_price'];
-    menu_picture1 = json['menu_picture1'];
-    menu_picture2 = json['menu_picture2'];
-    menu_picture3 = json['menu_picture3'];
-    lanlog = json['lanlog'];
-    user = json['user'];
+  factory LocationMenuDetail.fromJson(Map<String, dynamic> json) {
+    return LocationMenuDetail(
+        id: json['id'],
+        menu_title: json['menu_title'],
+        menu_description: json['menu_description'],
+        menu_price: json['menu_price'],
+        menu_picture1: json['menu_picture1'],
+        menu_picture2: json['menu_picture2'],
+        menu_picture3: json['menu_picture3'],
+        lanlog: json['lanlog'],
+        user: json['user']);
   }
 }
