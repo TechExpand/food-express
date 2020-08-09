@@ -32,12 +32,10 @@ class WebServices extends ChangeNotifier {
   var vendor_login_res;
   var vendor_info_res;
   var user_login_res;
+  var update_online_offline_res;
   var login_state = false;
   var login_state_second = false;
   var value;
-  List distance_list = [];
-  List locality = [];
-  List address_line = [];
 
   void Login_SetState() {
     if (login_state == false) {
@@ -186,6 +184,76 @@ class WebServices extends ChangeNotifier {
     }
   }
 
+  Future Update_Vendor_to_Online_Offline(
+      {bool online_offline,
+      lan,
+      log,
+      id,
+      online_offline_value,
+      color_value,
+      context}) async {
+    try {
+      var upload = http.MultipartRequest(
+          'PUT',
+          Uri.parse(
+              'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/${id}/'));
+      upload.fields['online'] = online_offline.toString();
+      upload.fields['Lan'] = lan.toString();
+      upload.fields['Log'] = log.toString();
+      upload.fields['user'] = '';
+      upload.headers['authorization'] =
+          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+
+      final stream = await upload.send();
+      update_online_offline_res = await http.Response.fromStream(stream);
+      print(update_online_offline_res);
+      var body = jsonDecode(update_online_offline_res.body);
+      if (update_online_offline_res.statusCode == 200 ||
+          update_online_offline_res.statusCode == 201) {
+        showDialog(
+            child: AlertDialog(
+              title: Center(
+                child: Icon(
+                  Icons.lens,
+                  color: color_value,
+                ),
+              ),
+              content: Text(
+                'You are now ${online_offline_value}',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            context: context);
+      } else if (update_online_offline_res.statusCode == 400 ||
+          update_online_offline_res.statusCode == 500 ||
+          update_online_offline_res.statusCode == 401) {
+        showDialog(
+            child: AlertDialog(
+              title: Center(
+                child: Icon(
+                  Icons.signal_cellular_connected_no_internet_4_bar,
+                  color: Colors.red,
+                ),
+              ),
+              content: Text('failed'),
+            ),
+            context: context);
+      }
+      return update_online_offline_res;
+    } catch (e) {
+      print(e);
+      showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+                  Text('Working on it', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Text('There was a Problem Encountered'),
+          ),
+          context: context);
+    }
+  }
+
   Future Vendor_Profile_Api() async {
     var vendor_profile_res = await http.get(
         Uri.encodeFull('http://192.168.43.231:8000/foodtruck-vendor/profile/'),
@@ -227,34 +295,23 @@ class WebServices extends ChangeNotifier {
     }
   }
 
-  Future get_all_vendor_current_location(context) async {
+  Future get_all_vendor_current_location({context, location_latitude, location_longtitude, range_value}) async {
     var locationValues = Provider.of<LocationService>(context, listen: false);
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck-vendor/currentvendorlanlog/'),
+              'http://192.168.43.231:8000/foodtruck-vendor/currentvendorslanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}/'),
           headers: {
             "Accept": "application/json",
             "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
           });
+
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body) as List;
         List<CurrentVendorlocation> vendor_current_location_objects = body
             .map((vendor_current_location_json) =>
                 CurrentVendorlocation.fromJson(vendor_current_location_json))
             .toList();
-
-        for (value in vendor_current_location_objects) {
-          locationValues.getaddress(
-              value: value, address_line: address_line, locality: locality);
-          locationValues.getdistance(
-              lat1: double.parse(value.Lan),
-              lon1: double.parse(value.Log),
-              lat2: locationValues.location_latitude,
-              lon2: locationValues.location_longitude,
-              distance_list: distance_list);
-        }
-
         notifyListeners();
         return vendor_current_location_objects;
       } else {
@@ -263,6 +320,28 @@ class WebServices extends ChangeNotifier {
     } catch (e) {
       print(e);
       print('failed to get locations');
+    }
+  }
+
+  Future get_current_vendor_location() async {
+    var current_vendor_location = await http.get(
+        Uri.encodeFull(
+            'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/'),
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+        });
+    if (current_vendor_location.statusCode == 200) {
+      print(current_vendor_location.body);
+      var body = jsonDecode(current_vendor_location.body) as List;
+      List<CurrentVendorlocation> current_vendor_location_objects = body
+          .map((current_vendor_location_json) =>
+              CurrentVendorlocation.fromJson(current_vendor_location_json))
+          .toList();
+      print(current_vendor_location_objects);
+      return current_vendor_location_objects;
+    } else {
+      throw 'Cant get vendor location';
     }
   }
 
@@ -625,7 +704,7 @@ class WebServices extends ChangeNotifier {
       if (user_login_res.statusCode == 200 ||
           user_login_res.statusCode == 201) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return SIGNUP();
+          return Map_user();
         }));
         Login_SetState();
       } else if (user_login_res.statusCode == 400 ||
@@ -819,7 +898,8 @@ class WebServices extends ChangeNotifier {
       upload.fields['menu_price'] = menu_price.toString();
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] = "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+      upload.headers['authorization'] =
+          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
       final stream = await upload.send();
       var upload_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(upload_menu_res.body);
@@ -915,7 +995,6 @@ class WebServices extends ChangeNotifier {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return VendorMenuPage();
       }));
-      print('doneeeeeeeeeee...');
       print(e);
     }
   }

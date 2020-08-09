@@ -4,8 +4,9 @@ class CurrentVendorlocation {
   String Log;
   bool online;
   int user;
+  int distance;
 
-  CurrentVendorlocation({this.id, this.Lan, this.Log, this.online, this.user});
+  CurrentVendorlocation({this.id, this.Lan, this.Log, this.online, this.user, this.distance});
 
   factory CurrentVendorlocation.fromJson(Map<String, dynamic> json) {
     return CurrentVendorlocation(
@@ -13,6 +14,8 @@ class CurrentVendorlocation {
         Lan: json['Lan'],
         Log: json['Log'],
         online: json['online'],
-        user: json['user']);
+        user: json['user'],
+        distance: json['distance']
+    );
   }
 }
