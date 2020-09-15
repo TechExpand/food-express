@@ -1,21 +1,39 @@
-import 'dart:convert';
-
+import 'dart:async';
+import 'dart:io';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:foodtruckexpressxd/Services/LocationService.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/Utils/provider_util.dart';
-import 'package:foodtruckexpressxd/Utils/utils.dart';
-import 'package:foodtruckexpressxd/Widget/Local_Widget/Local_Widget.dart';
-import 'package:foodtruckexpressxd/screens/Login_SignupView/login.dart';
+import 'package:foodtruck/Services/LocationService.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/Utils/provider_util.dart';
+import 'package:foodtruck/Utils/utils.dart';
+import 'package:foodtruck/screens/Login_SignupView/SIGNUP.dart';
+import 'package:foodtruck/screens/Login_SignupView/login.dart';
+import 'package:foodtruck/screens/SPLASH.dart';
+import 'package:foodtruck/screens/UserView/Map_user.dart';
+import 'package:foodtruck/screens/VendorView/MAp_vendor.dart';
+import 'package:foodtruck/screens/VendorView/VENDORSIGNUP_INFO.dart';
+import 'package:foodtruck/screens/VendorView/VENDORprofile.dart';
+import 'package:foodtruck/screens/VendorView/VendorMenuPage.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
+import 'package:statusbar/statusbar.dart';
 
 void main() {
-  LocationService locationservice = LocationService();
+  String getAppId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-7014950727779735~4209024008';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-7014950727779735~4209024008';
+    }
+    return null;
+  }
+
+
   Provider.debugCheckInvalidValueType = null;
+  Admob.initialize(getAppId());
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<LocationService>(
@@ -30,10 +48,13 @@ void main() {
       ChangeNotifierProvider<Utils>(
         create: (context) => Utils(),
       ),
+       ChangeNotifierProvider<AdmobService>(
+        create: (context) => AdmobService(),
+      ),
     ],
     child: StartApp(),
   ));
-  locationservice.onlocation();
+  
 }
 
 class StartApp extends StatefulWidget {
@@ -44,24 +65,58 @@ class StartApp extends StatefulWidget {
   }
 }
 
+
 class StartAppState extends State<StartApp> {
   @override
   void initState() {
+       super.initState();
+    StatusBar.color(Colors.blue);
     Provider.of<LocationService>(context, listen: false).getCurrentLocation();
-    super.initState();
+    //Get current location every 5 minutes.
+    Timer.periodic(Duration(minutes: 5), (timer) {
+      Provider.of<LocationService>(context, listen: false).getCurrentLocation();
+    });
+
+
+
+     //Admob Advert Code
+  
+      Provider.of<AdmobService>(context, listen: false).instatitialAd = AdmobInterstitial(
+      adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+        if(event == AdmobAdEvent.closed){
+          Provider.of<AdmobService>(context, listen: false).instatitialAd.load();
+        }
+
+    },
+    ); 
+  Provider.of<AdmobService>(context, listen: false).instatitialAd.load();
+  
+//Show instatitialAds every 5 minutes.
+   Timer.periodic(Duration(minutes: 1), (timer) {
+      Provider.of<AdmobService>(context, listen: false).instatitialAd.show();
+    });
   }
 
+
+@override
+void dispose(){
+  super.dispose();
+  Provider.of<AdmobService>(context, listen: false).instatitialAd.dispose();
+}
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return MyApp();
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MyApp(),
+    );
   }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Login();
   }

@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/screens/VendorView/VendorAddMenu.dart';
-import 'package:foodtruckexpressxd/screens/VendorView/vendoreditmenu.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/screens/VendorView/VendorAddMenu.dart';
+import 'package:foodtruck/screens/VendorView/vendoreditmenu.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -22,10 +24,34 @@ class VendorMenuPage extends StatefulWidget {
 }
 
 class VendorMenuPageState extends State<VendorMenuPage> {
+  ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        setState(() {
+          print('LOAD NEXT PAGE');
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var webservices = Provider.of<WebServices>(context, listen: false);
     return Scaffold(
+      bottomNavigationBar: Container(
+                    color: Colors.white,
+                    child: AdmobBanner(
+                      adUnitId: Provider.of<AdmobService>(context, listen: false).getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.BANNER,
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+
+                      },
+                    )
+                  ),
         backgroundColor: Colors.white,
         body: Column(
           children: <Widget>[
@@ -35,22 +61,37 @@ class VendorMenuPageState extends State<VendorMenuPage> {
                 // Adobe XD layer: 'background' (shape)
                 Container(
                   height: 191.0,
+                  
                   decoration: BoxDecoration(
-                    color: Color(0xff2699fb),
+                     image: DecorationImage(
+                          image: AssetImage('assets/images/foodtruck-bg.jpg')
+                          ),
+                
                   ),
                 ),
-                InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.width / 8,
-                            left: MediaQuery.of(context).size.width / 20),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ))),
+ InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child:  Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.width / 8,
+                                  left: MediaQuery.of(context).size.width / 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                         color: Colors.white,
+                            shape: BoxShape.circle
+                          ),
+                          width: 30,
+                          height: 30,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              )),
+                        ),
                 Align(
                   alignment: Alignment.center,
                   child: SizedBox(
@@ -107,19 +148,16 @@ class VendorMenuPageState extends State<VendorMenuPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (context,
-                              animation,
-                              secondaryAnimation) {
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
                             return vendoraddmenu();
                           },
-                          transitionsBuilder: (context,
-                              animation,
-                              secondaryAnimation,
-                              child) {
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
                             return FadeTransition(
                               opacity: animation,
                               child: child,
@@ -137,196 +175,205 @@ class VendorMenuPageState extends State<VendorMenuPage> {
               ],
             ),
             Divider(),
-            FutureBuilder(
-                future: webservices.Vendor_Profile_Menu(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Expanded(
-                      child: GridView.builder(
-                        physics: ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1,
-                          crossAxisSpacing: 1,
-                        ),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(snapshot
-                                              .data[index].menu_picture1),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                      height: 50,
-                                      width: 60,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        snapshot.data[index].menu_title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    Divider(),
-                                    Container(
-                                      child: Row(
-                                        children: <Widget>[
-                                          InkWell(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 25.0, top: 8),
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: Colors.blue,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                PageRouteBuilder(
-                                                  pageBuilder: (context,
-                                                      animation,
-                                                      secondaryAnimation) {
-                                                    return vendoreditmenu(
-                                                      snapshot_data:
-                                                          snapshot.data[index],
-                                                      snapshot_profile_data: widget
-                                                          .snapshot_profile_data,
-                                                    );
-                                                  },
-                                                  transitionsBuilder: (context,
-                                                      animation,
-                                                      secondaryAnimation,
-                                                      child) {
-                                                    return FadeTransition(
-                                                      opacity: animation,
-                                                      child: child,
-                                                    );
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8),
-                                            child: Container(
-                                                width: 1.5,
-                                                height: 15,
-                                                color: Colors.black54),
-                                          ),
-                                          InkWell(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 25.0, top: 8),
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                            onTap: () {
-                                              return showDialog(
-                                                  child: AlertDialog(
-                                                    content: Container(
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Text(
-                                                            'Are You Sure You Want to Delete?',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .blue),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                          ButtonBar(
-                                                            alignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: <Widget>[
-                                                              IconButton(
-                                                                  icon: Icon(
-                                                                    Icons.clear,
-                                                                    color: Colors
-                                                                        .black54,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  }),
-                                                              IconButton(
-                                                                  icon: Icon(
-                                                                    Icons.check,
-                                                                    color: Colors
-                                                                        .red,
-                                                                  ),
-                                                                  onPressed:
-                                                                      () {
-                                                                    webservices
-                                                                        .Login_SetState();
-                                                                    webservices.Delete_Menu(
-                                                                        context:
-                                                                            context,
-                                                                        id: snapshot
-                                                                            .data[index]
-                                                                            .id);
-                                                                  }),
-                                                            ],
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: webservices
-                                                                        .login_state ==
-                                                                    false
-                                                                ? Text('')
-                                                                : CircularProgressIndicator(),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      height: 140,
-                                                    ),
-                                                  ),
-                                                  context: context);
-                                            },
-                                          )
-                                        ],
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                      ),
-                                      width: 100,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }),
+            Expanded(
+              child: Menu_Items_Widget(),
+            )
           ],
         ));
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  Widget Menu_Items_Widget() {
+    var webservices = Provider.of<WebServices>(context, listen: false);
+    return FutureBuilder(
+        future: webservices.Vendor_Profile_Menu(),
+        builder: (context, snapshot) {
+          return GridView.builder(
+            controller: scrollController,
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 1,
+              crossAxisSpacing: 1,
+            ),
+            itemCount: webservices.vendor_menu_data == null
+                ? 0
+                : webservices.vendor_menu_data.length + 1,
+            itemBuilder: (context, index) {
+              return index != webservices.vendor_menu_data.length
+                  ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Container(
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(webservices
+                                        .vendor_menu_data[index].menu_picture1),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                height: 50,
+                                width: 60,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  webservices
+                                      .vendor_menu_data[index].menu_title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Divider(),
+                              Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 25.0, top: 8),
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Color(0xFF67b9fb),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation,
+                                                secondaryAnimation) {
+                                              return vendoreditmenu(
+                                                snapshot_data: webservices
+                                                    .vendor_menu_data[index],
+                                                snapshot_profile_data: widget
+                                                    .snapshot_profile_data,
+                                              );
+                                            },
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              return FadeTransition(
+                                                opacity: animation,
+                                                child: child,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8),
+                                      child: Container(
+                                          width: 1.5,
+                                          height: 15,
+                                          color: Colors.black54),
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 25.0, top: 8),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        return showDialog(
+                                            child: AlertDialog(
+                                              content: Container(
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Are You Sure You Want to Delete?',
+                                                      style: TextStyle(
+                                                         color: Color(0xFF67b9fb),),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                    ButtonBar(
+                                                      alignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        IconButton(
+                                                            icon: Icon(
+                                                              Icons.clear,
+                                                              color: Colors
+                                                                  .black54,
+                                                              size: 30,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }),
+                                                        IconButton(
+                                                            icon: Icon(
+                                                              Icons.check,
+                                                              color: Colors.red,
+                                                              size: 30,
+                                                            ),
+                                                            onPressed: () {
+                                                              webservices
+                                                                  .Login_SetState();
+                                                              webservices.Delete_Menu(
+                                                                  context:
+                                                                      context,
+                                                                  id: webservices
+                                                                      .vendor_menu_data[
+                                                                          index]
+                                                                      .id);
+                                                            }),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: webservices
+                                                                  .login_state ==
+                                                              false
+                                                          ? Text('')
+                                                          : CircularProgressIndicator(),
+                                                    ),
+                                                  ],
+                                                ),
+                                                height: 140,
+                                              ),
+                                            ),
+                                            context: context);
+                                      },
+                                    )
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
+                                width: 100,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : buildProgressIndicator();
+            },
+          );
+        });
+  }
+
+  Widget buildProgressIndicator() {
+    var webservices = Provider.of<WebServices>(context, listen: false);
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: new Opacity(
+          opacity: webservices.isLoading ? 0.0 : 1.0,
+          child: new CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 }

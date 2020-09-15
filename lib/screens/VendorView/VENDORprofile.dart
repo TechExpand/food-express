@@ -1,12 +1,12 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/screens/VendorView/VendorProfileedit.dart';
-import 'dart:ui' as ui;
-import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-import 'package:foodtruckexpressxd/Model/vendorprofile.dart';
-import 'package:foodtruckexpressxd/screens/VendorView/VendorMenuPage.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/screens/VendorView/ManageVendorSubScription.dart';
+import 'package:foodtruck/screens/VendorView/SetNewDefaultCard.dart';
+import 'package:foodtruck/screens/VendorView/VendorProfileedit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foodtruck/screens/VendorView/VendorMenuPage.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'package:provider/provider.dart';
 
 class VENDORprofile extends StatefulWidget {
@@ -19,11 +19,23 @@ class VENDORprofile extends StatefulWidget {
 
 class VENDORprofilestate extends State<VENDORprofile> {
   var online_offline_value = true;
+  GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     var webservices = Provider.of<WebServices>(context, listen: false);
     return Scaffold(
+      bottomNavigationBar:  Container(
+                    color: Colors.white,
+                    child: AdmobBanner(
+                      adUnitId: Provider.of<AdmobService>(context, listen: false).getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.BANNER,
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+
+                      },
+                    )
+                  ),
+      key: scaffoldKey,
       backgroundColor: const Color(0xffffffff),
       body: FutureBuilder(
         future: webservices.Vendor_Profile_Api(),
@@ -40,21 +52,36 @@ class VENDORprofilestate extends State<VENDORprofile> {
                     Container(
                       height: 191.0,
                       decoration: BoxDecoration(
-                        color: Color(0xff2699fb),
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/foodtruck-bg.jpg')
+                          ),
+                        ),
+                    
                       ),
-                    ),
-                    InkWell(
+                    
+                   InkWell(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Padding(
-                            padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width / 8,
-                                left: MediaQuery.of(context).size.width / 20),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ))),
+                        child:  Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.width / 8,
+                                  left: MediaQuery.of(context).size.width / 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                         color: Colors.white,
+                            shape: BoxShape.circle
+                          ),
+                          width: 30,
+                          height: 30,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              )),
+                        ),
                     Align(
                       alignment: Alignment.center,
                       child: SizedBox(
@@ -81,7 +108,7 @@ class VENDORprofilestate extends State<VENDORprofile> {
                           child: Text(
                             snapshot.data[0].business_name,
                             style: TextStyle(
-                              fontFamily: 'Georgia',
+                              fontFamily: 'Arial',
                               fontSize: 30,
                               color: const Color(0xffffffff),
                               height: 1,
@@ -110,6 +137,7 @@ class VENDORprofilestate extends State<VENDORprofile> {
                                       if (snapshot.data[0].online == true) {
                                         webservices
                                             .Update_Vendor_to_Online_Offline(
+                                          scaffoldKey: scaffoldKey,
                                           context: context,
                                           lan: snapshot.data[0].Lan,
                                           log: snapshot.data[0].Log,
@@ -122,6 +150,7 @@ class VENDORprofilestate extends State<VENDORprofile> {
                                       } else {
                                         webservices
                                             .Update_Vendor_to_Online_Offline(
+                                          scaffoldKey: scaffoldKey,
                                           context: context,
                                           lan: snapshot.data[0].Lan,
                                           log: snapshot.data[0].Log,
@@ -138,6 +167,14 @@ class VENDORprofilestate extends State<VENDORprofile> {
                               }
                               return Text('Loading');
                             }),
+                            Text('ONLINE/OFFLINE',  style: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                               color: Colors.black54,
+                              height: 1,
+                            ),
+                           )
                       ],
                     ),
                   ),
@@ -149,40 +186,58 @@ class VENDORprofilestate extends State<VENDORprofile> {
                     children: <Widget>[
                       Column(
                         children: <Widget>[
-                          CircleAvatar(
-                            backgroundColor: Colors.white,
-                            backgroundImage:
-                                NetworkImage(snapshot.data[0].pro_pic),
-                            radius: 35,
-                            child: Text(''),
-                          ),
-                          RaisedButton(
-                            color: Color(0xff2699fb),
-                            child: Text(
-                              'Change Picture',
-                              style: TextStyle(color: Colors.white),
+                          Padding(
+                            padding: const EdgeInsets.only(top:8.0, bottom: 8.0,right: 8.0),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data[0].pro_pic),
+                              radius: 35,
+                              child: Text(''),
                             ),
-                            onPressed: () {
-                              return Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) {
-                                    return VENDORprofileEdith(
-                                      snapshot_profile_data: snapshot.data[0],
-                                    );
-                                  },
-                                  transitionsBuilder: (context, animation,
-                                      secondaryAnimation, child) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          )
+                          ),
+                          Center(
+      child: RaisedButton(
+          color: Color(0xff67b9fb),
+          onPressed: () {
+                                return Navigator.push(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder:
+                                        (context, animation, secondaryAnimation) {
+                                      return VENDORprofileEdith(
+                                        snapshot_profile_data: snapshot.data[0],
+                                      );
+                                    },
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
+                                      return FadeTransition(
+                                        opacity: animation,
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          
+          child: Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Text(
+                "Change Picture",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white
+                ),
+              ),
+            ),
+          ),
+        ),
+    ),
+                            
+                          
                         ],
                       ),
                       Container(
@@ -191,14 +246,14 @@ class VENDORprofilestate extends State<VENDORprofile> {
                       ),
                       Flexible(
                         child: Text(
-                          'Phone Num:' + snapshot.data[0].phone,
+                          'Tel:' + snapshot.data[0].phone,
                           style: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 16,
                             color: Colors.black54,
                             height: 1,
                           ),
-                          textAlign: TextAlign.left,
+                          
                         ),
                       )
                     ],
@@ -221,65 +276,149 @@ class VENDORprofilestate extends State<VENDORprofile> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 2,
-                    child: ListTile(
-                      trailing: Icon(Icons.description),
-                      title: Text(
-                        'Edit Your Profile Details',
-                        style: TextStyle(color: Colors.black54),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                    child: Card(
+                      elevation: 2,
+                      child: ListTile(
+                        trailing: Icon(Icons.description, color: Colors.black87),
+                        title: Text(
+                          'Edit Your Profile Details',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        onTap: () {
+                          return Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return VENDORprofileEdith(
+                                  snapshot_profile_data: snapshot.data[0],
+                                );
+                              },
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        return Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) {
-                              return VENDORprofileEdith(
-                                snapshot_profile_data: snapshot.data[0],
-                              );
-                            },
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),
-                Card(
-                  elevation: 2,
-                  child: ListTile(
-                    trailing: Icon(Icons.fastfood),
-                    title: Text(
-                      'My Menus',
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                    onTap: () {
-                      return Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) {
-                            return VendorMenuPage(
-                              snapshot_profile_data: snapshot.data[0],
-                            );
-                          },
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                    child: Card(
+                      elevation: 2,
+                      child: ListTile(
+                        trailing:
+                            Icon(Icons.fastfood, color: Colors.orangeAccent),
+                        title: Text(
+                          'My Menus',
+                          style: TextStyle(color: Colors.black54),
                         ),
-                      );
-                    },
+                        onTap: () {
+                          return Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return VendorMenuPage(
+                                  snapshot_profile_data: snapshot.data[0],
+                                );
+                              },
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                    child: Card(
+                      elevation: 2,
+                      child: ListTile(
+                        trailing: Icon(
+                          FontAwesomeIcons.cloudversify,
+                          color: Colors.lightBlueAccent,
+                        ),
+                        title: Text(
+                          'Manage Subscription Plan',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        onTap: () {
+                          return Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return managesubscription();
+                              },
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                    child: Card(
+                      elevation: 2,
+                      child: ListTile(
+                        trailing: Icon(
+                          FontAwesomeIcons.ccVisa,
+                         color: Color(0xFF67b9fb),
+                        ),
+                        title: Text(
+                          'Set New Payment Card',
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                        onTap: () {
+                          return Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                return vendoraddcard();
+                              },
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ],

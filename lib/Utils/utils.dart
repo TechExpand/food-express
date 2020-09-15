@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -42,4 +41,12 @@ class Utils with ChangeNotifier{
     notifyListeners();
   }
 
+
+  Future makePhoneCall(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 }

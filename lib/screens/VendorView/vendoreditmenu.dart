@@ -1,6 +1,8 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/Utils/utils.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/Utils/utils.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
@@ -30,6 +32,16 @@ class vendoreditmenustate extends State<vendoreditmenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar:  Container(
+                    color: Colors.white,
+                    child: AdmobBanner(
+                      adUnitId: Provider.of<AdmobService>(context, listen: false).getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.BANNER,
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+
+                      },
+                    )
+                  ),
         backgroundColor: const Color(0xffffffff),
         body: SingleChildScrollView(child: Consumer2<WebServices, Utils>(
             builder: (context, webservices_consumer, utils_consumer, child) {
@@ -44,21 +56,34 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                     Container(
                       height: 191.0,
                       decoration: BoxDecoration(
-                        color: Color(0xff2699fb),
+                         image: DecorationImage(
+                          image: AssetImage('assets/images/foodtruck-bg.jpg')
+                          ),
                       ),
                     ),
-                    InkWell(
+                InkWell(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Padding(
-                            padding: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width / 8,
-                                left: MediaQuery.of(context).size.width / 20),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                            ))),
+                        child:  Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.width / 8,
+                                  left: MediaQuery.of(context).size.width / 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                         color: Colors.white,
+                            shape: BoxShape.circle
+                          ),
+                          width: 30,
+                          height: 30,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              )),
+                        ),
                     Align(
                       alignment: Alignment.center,
                       child: SizedBox(
@@ -103,7 +128,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                   child: SizedBox(
                     width: 480,
                     child: TextFormField(
-                      initialValue: widget.snapshot_data.menu_title,
+                      initialValue: widget.snapshot_data.card_number,
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Menu title is Required';
@@ -114,7 +139,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                       },
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(8)),
                           labelText: 'Menu Title',
                           labelStyle: TextStyle(
                               color: Colors.black87,
@@ -124,7 +149,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                             color: Colors.black87,
                           ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                              borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
@@ -133,7 +158,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                   child: SizedBox(
                     width: 480,
                     child: TextFormField(
-                      initialValue: widget.snapshot_data.menu_description,
+                      initialValue: widget.snapshot_data.exp_month,
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Menu Description is Required';
@@ -144,7 +169,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                       },
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(8)),
                           labelText: 'Menu Description',
                           labelStyle: TextStyle(
                               color: Colors.black87,
@@ -154,7 +179,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                             color: Colors.black87,
                           ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                              borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
@@ -163,7 +188,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                   child: SizedBox(
                     width: 480,
                     child: TextFormField(
-                      initialValue: widget.snapshot_data.menu_price.toString(),
+                      initialValue: widget.snapshot_data.exp_year.toString(),
                       validator: (value) {
                         if (value.isEmpty) {
                           return 'Menu Price is Required';
@@ -174,7 +199,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                       },
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
+                              borderRadius: BorderRadius.circular(8)),
                           labelText: 'Menu Price',
                           labelStyle: TextStyle(
                               color: Colors.black87,
@@ -184,7 +209,7 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                             color: Colors.black87,
                           ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20))),
+                              borderRadius: BorderRadius.circular(8))),
                     ),
                   ),
                 ),
@@ -202,7 +227,30 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                             id: widget.snapshot_data.id,
                           );
                         },
-                        child: Text('Update Menu Details'))
+                
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Update Menu Details",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
+                        )
                     : CircularProgressIndicator(),
                 Divider(),
                 Text('Change Product Images'),
@@ -222,16 +270,34 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    
                     child: RaisedButton(
                       onPressed: () {
                         utils_consumer.selectimage1();
                       },
-                      child: Text(
-                        'Select First Image',
-                        style: TextStyle(
-                            color: Colors.black87, fontWeight: FontWeight.bold),
-                      ),
+                      
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Select First Image",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
                     ),
                   ),
                 ),
@@ -251,16 +317,34 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                   
                     child: RaisedButton(
                       onPressed: () {
                         return utils_consumer.selectimage2();
                       },
-                      child: Text(
-                        'Select Second Image',
-                        style: TextStyle(
-                            color: Colors.black87, fontWeight: FontWeight.bold),
-                      ),
+                     
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Select Second Image",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
                     ),
                   ),
                 ),
@@ -277,16 +361,34 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Container(
-                    width: MediaQuery.of(context).size.width,
+                    
                     child: RaisedButton(
                       onPressed: () {
                         return utils_consumer.selectimage3();
                       },
-                      child: Text(
-                        'Select Third Image',
-                        style: TextStyle(
-                            color: Colors.black87, fontWeight: FontWeight.bold),
-                      ),
+                    
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Select Third Image",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
                     ),
                   ),
                 ),
@@ -305,7 +407,31 @@ class vendoreditmenustate extends State<vendoreditmenu> {
                           id: widget.snapshot_data.id,
                         );
                       },
-                      child: Text('Update Menu Images')),
+  
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Update menu Images",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
+                      ),
+                      
                     )
                     : Padding(
                       padding: const EdgeInsets.all(8.0),

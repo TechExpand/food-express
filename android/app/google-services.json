@@ -8,20 +8,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:191458152021:android:97b89662d39aff2d00cedc",
+        "mobilesdk_app_id": "1:191458152021:android:e915f2cd53d82a0800cedc",
         "android_client_info": {
-          "package_name": "com.example.hello_world"
+          "package_name": "com.express.foodtruck"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "191458152021-si1oq6knmulh4ll7pu4tef2mo511da5n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.hello_world",
-            "certificate_hash": "5aa2e77baf58d42cc80f4bdc75fbd946f8b7f73e"
-          }
-        },
         {
           "client_id": "191458152021-901gcd8omabs7nm9er0hhh3774ntgjpj.apps.googleusercontent.com",
           "client_type": 3
@@ -38,6 +30,13 @@
             {
               "client_id": "191458152021-901gcd8omabs7nm9er0hhh3774ntgjpj.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "191458152021-n9l7nreqrlcgs15oie6or12go2ls19n1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.helloWorld"
+              }
             }
           ]
         }

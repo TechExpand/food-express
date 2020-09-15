@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hello_world">
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    package="com.express.foodtruck">
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- or -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
@@ -10,7 +10,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="hello_world"
+        android:label="foodtruck"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -46,7 +46,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <meta-data android:name="com.google.android.geo.API_KEY"
+		<meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDjRcrQ1i6u9Hfe9IYMtj-LxoVYy5Ou280"/>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7014950727779735~4209024008"/>
     </application>
 </manifest>

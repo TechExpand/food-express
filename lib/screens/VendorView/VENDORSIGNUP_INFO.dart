@@ -1,9 +1,12 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:adobe_xd/specific_rect_clip.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/Utils/utils.dart';
-import 'package:foodtruckexpressxd/screens/UserView/Map_user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/Utils/utils.dart';
+import 'package:foodtruck/screens/UserView/Map_user.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'package:provider/provider.dart';
 
 class VENDORSIGNUP22 extends StatelessWidget {
@@ -27,7 +30,11 @@ class VENDORSIGNUP2 extends StatefulWidget {
 class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
   var business_name;
   var unique_detail;
+  var exp_month;
+  var card_number;
   var phone;
+  var exp_year;
+  var cvc;
   var detail;
   var pro_pic;
   final form_key = GlobalKey<FormState>();
@@ -41,16 +48,32 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Container(
+                    color: Colors.white,
+                    child: AdmobBanner(
+                      adUnitId: Provider.of<AdmobService>(context, listen: false).getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.BANNER,
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+
+                      },
+                    )
+                  ),
       appBar: AppBar(
+        actions: <Widget>[
+         Image.asset('assets/images/truckIcon.png', width: 100,),
+         SizedBox(width: 8,)
+        ],
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           'FOODTRUCK.EXPRESS',
           style: TextStyle(
             fontFamily: 'Arial',
             fontSize: 15,
-            color: const Color(0xffffffff),
+            color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
+          overflow: TextOverflow.visible,
         ),
       ),
       backgroundColor: const Color(0xffffffff),
@@ -68,14 +91,9 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                     padding:
                         EdgeInsets.all(MediaQuery.of(context).size.height / 14),
                     child: Container(
-                      width: 150.0,
-                      height: 86.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: const AssetImage('assets/images/logotruck.png'),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
+                      width: 150,
+                        height: 100,
+                        child: Image.asset('assets/images/logotruck.png')
                     ),
                   ),
                   Padding(
@@ -94,7 +112,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                         },
                         decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)),
+                                borderRadius: BorderRadius.circular(8)),
                             labelText: 'Business Name',
                             labelStyle: TextStyle(
                               color: Colors.black54,
@@ -104,7 +122,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                               color: Colors.white,
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0))),
+                                borderRadius: BorderRadius.circular(8))),
                       ),
                     ),
                   ),
@@ -124,8 +142,8 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                         },
                         decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)),
-                            labelText: 'Describe what makes your truck unique',
+                                borderRadius: BorderRadius.circular(8)),
+                            labelText: 'Why Are you Unique',
                             labelStyle: TextStyle(
                               color: Colors.black54,
                             ),
@@ -134,7 +152,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                               color: Colors.white,
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0))),
+                                borderRadius: BorderRadius.circular(8))),
                       ),
                     ),
                   ),
@@ -154,7 +172,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                         },
                         decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)),
+                                borderRadius: BorderRadius.circular(8)),
                             labelText: 'Details',
                             labelStyle: TextStyle(
                               color: Colors.black54,
@@ -164,7 +182,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                               color: Colors.white,
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0))),
+                                borderRadius: BorderRadius.circular(8))),
                       ),
                     ),
                   ),
@@ -174,6 +192,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                     child: SizedBox(
                       width: 300,
                       child: TextFormField(
+                        keyboardType:TextInputType.phone ,
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Phone Required';
@@ -184,7 +203,7 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                         },
                         decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0)),
+                                borderRadius: BorderRadius.circular(8)),
                             labelText: 'Phone',
                             labelStyle: TextStyle(
                               color: Colors.black54,
@@ -194,23 +213,41 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                               color: Colors.white,
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(0))),
+                                borderRadius: BorderRadius.circular(8))),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      
                       child: RaisedButton(
                         onPressed: () {
                           return utils_consumer.selectimage();
                         },
-                        child: Text(
-                          'business image',
-                          style: TextStyle(
-                              color: Colors.black87, fontWeight: FontWeight.bold),
-                        ),
+                      
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Business Image",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
                       ),
                     ),
                   ),
@@ -220,6 +257,136 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                     child: utils_consumer.selected_image == null
                         ? Center(child: Text('No Image Selected'))
                         : Image.file(utils_consumer.selected_image),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Card Details', style: TextStyle(fontWeight: FontWeight.bold),),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: 480,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Card Number Required';
+                          } else {
+                            card_number = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            labelText: 'Card Number',
+                            hintText: 'e.g 12345678910',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            icon: Icon(
+                              Icons.credit_card,
+                              color: Colors.black87,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: 480,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'expiring month is Required';
+                          } else {
+                            exp_month = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            labelText: 'Expiring Month',
+                            hintText: 'e.g 3',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            icon: Icon(
+                              Icons.date_range,
+                              color: Colors.black87,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: 480,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'expiring year is Required';
+                          } else {
+                            exp_year = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            labelText: 'Expiring Year',
+                            hintText: 'e.g 2021',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            icon: Icon(
+                              Icons.date_range,
+                              color: Colors.black87,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: SizedBox(
+                      width: 480,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'cvc is Required';
+                          } else {
+                            cvc = value;
+                            return null;
+                          }
+                        },
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            labelText: 'CVC',
+                            hintText: 'e.g 000',
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            icon: Icon(
+                              FontAwesomeIcons.creditCard,
+                              color: Colors.black87,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -235,14 +402,37 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                           detail:detail,
                           phone:phone,
                           path: utils_consumer.selected_image.path,
+                          exp_month: exp_month,
+                          exp_year: exp_year,
+                          cvc: cvc,
+                          number: card_number,
                         );
                       }},
 
-                      color: Colors.blue,
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    color: Color(0xFF67b9fb),
+                     
+                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Continue",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
                     ):CircularProgressIndicator()
                   ),
                   Row(

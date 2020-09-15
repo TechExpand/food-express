@@ -1,6 +1,8 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:foodtruckexpressxd/Services/Network.dart';
-import 'package:foodtruckexpressxd/Utils/utils.dart';
+import 'package:foodtruck/Services/Network.dart';
+import 'package:foodtruck/Utils/utils.dart';
+import 'package:foodtruck/Services/admob.dart';
 import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
@@ -30,6 +32,16 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar:  Container(
+                    color: Colors.white,
+                    child: AdmobBanner(
+                      adUnitId: Provider.of<AdmobService>(context, listen: false).getBannerAdUnitId(),
+                      adSize: AdmobBannerSize.BANNER,
+                      listener: (AdmobAdEvent event, Map<String, dynamic> args){
+
+                      },
+                    )
+                  ),
         backgroundColor: const Color(0xffffffff),
         body: SingleChildScrollView(
             child: Consumer2<WebServices, Utils>(
@@ -46,27 +58,35 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                               Container(
                                 height: 191.0,
                                 decoration: BoxDecoration(
-                                  color: Color(0xff2699fb),
+                                   image: DecorationImage(
+                          image: AssetImage('assets/images/foodtruck-bg.jpg')
+                          ),
+                                
                                 ),
                               ),
-                              InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Padding(
-                                      padding: EdgeInsets.only(
-                                          top: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              8,
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              20),
-                                      child: Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.white,
-                                      ))),
+                               InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child:  Padding(
+                              padding: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.width / 8,
+                                  left: MediaQuery.of(context).size.width / 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                         color: Colors.white,
+                            shape: BoxShape.circle
+                          ),
+                          width: 30,
+                          height: 30,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black38,
+                                  ),
+                                ),
+                              )),
+                        ),
                               Align(
                                 alignment: Alignment.center,
                                 child: SizedBox(
@@ -133,7 +153,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                   child: Text(
                                     'Select Profile Picture',
                                     style: TextStyle(
-                                        color: Colors.blue,
+                                       color: Color(0xFF67b9fb),
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -151,7 +171,29 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                   id: widget.snapshot_profile_data.id,
                                 );
                               },
-                              child: Text('Update Profile Picture'))
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Update Profile Profile",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
+                              )
                               : CircularProgressIndicator(),
                           Divider(),
                           Padding(
@@ -172,7 +214,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                 decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                            BorderRadius.circular(8)),
                                     labelText: 'Phone',
                                     labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -183,7 +225,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                     ),
                                     border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20))),
+                                            BorderRadius.circular(8))),
                               ),
                             ),
                           ),
@@ -205,7 +247,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                 decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                            BorderRadius.circular(8)),
                                     labelText: 'Business Name',
                                     labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -216,7 +258,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                     ),
                                     border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20))),
+                                            BorderRadius.circular(8))),
                               ),
                             ),
                           ),
@@ -238,7 +280,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                 decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                            BorderRadius.circular(8)),
                                     labelText: 'Unique Detail',
                                     labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -249,7 +291,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                     ),
                                     border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20))),
+                                            BorderRadius.circular(8))),
                               ),
                             ),
                           ),
@@ -271,7 +313,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                 decoration: InputDecoration(
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                            BorderRadius.circular(8)),
                                     labelText: 'Detail',
                                     labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -282,16 +324,16 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                     ),
                                     border: OutlineInputBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20))),
+                                            BorderRadius.circular(8))),
                               ),
                             ),
                           ),
                           Divider(),
-                          webservices_consumer.login_state == false
+                          webservices_consumer.login_state_third == false
                               ? RaisedButton(
                                   onPressed: () {
                                     if (_formkey.currentState.validate())
-                                      webservices_consumer.Login_SetState();
+                                      webservices_consumer.Login_SetState_third();
                                     webservices_consumer.Update_Profile_Details(
                                       phone: phone,
                                       business_name: business_name,
@@ -301,7 +343,30 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                       id: widget.snapshot_profile_data.id,
                                     );
                                   },
-                                  child: Text('Update Menu Details'))
+                      
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    padding: EdgeInsets.all(0.0),
+    child: Ink(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Color(0xff67b9fb), Color(0xff8acbff)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 200.0, minHeight: 50.0),
+        alignment: Alignment.center,
+        child: Text(
+          "Update Menu Details",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white
+          ),
+        ),
+      ),
+    ),
+                                  )
                               : CircularProgressIndicator(),
                           Divider(),
                         ],
