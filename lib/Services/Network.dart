@@ -36,7 +36,7 @@ class WebServices extends ChangeNotifier {
     var login_state_third = false;
   var value;
   var isLoading = false;
-  String nextpage_menu = 'http://192.168.43.231:8000/foodtruck-vendor/menu/';
+  String nextpage_menu = 'wingu1000.pythonanywhere.com/foodtruck-vendor/menu/';
 
   void Login_SetState() {
     if (login_state == false) {
@@ -71,10 +71,10 @@ class WebServices extends ChangeNotifier {
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck-vendor/locationprofile/${id.toString()}'),
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/locationprofile/${id.toString()}'),
           headers: {
             "Accept": "application/json",
-            "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+            "Authorization": 'Token ${token['auth_token']}'
           });
       if (res.statusCode == 200) {
         print(res.body);
@@ -98,10 +98,10 @@ class WebServices extends ChangeNotifier {
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck-vendor/locationmenu/id=${id.toString()}/sub_id=${subscription_id.toString()}'),
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/locationmenu/id=${id.toString()}/sub_id=${subscription_id.toString()}'),
           headers: {
             "Accept": "application/json",
-            "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+            "Authorization":  'Token ${token['auth_token']}'
           });
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body);
@@ -128,7 +128,7 @@ class WebServices extends ChangeNotifier {
     try {
       var res = await http.get(Uri.encodeFull('${nextpage_menu}'), headers: {
         "Accept": "application/json",
-        "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+        "Authorization":  'Token ${token['auth_token']}'
       });
       isLoading = true;
       if (res.statusCode == 200) {
@@ -166,7 +166,7 @@ class WebServices extends ChangeNotifier {
       var upload = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/profile/number=${number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/profile/number=${number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'));
       var file = await http.MultipartFile.fromPath('pro_pic', path);
       upload.files.add(file);
       upload.fields['business_name'] = business_name.toString();
@@ -176,7 +176,7 @@ class WebServices extends ChangeNotifier {
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          'Token 41b835636ae90a02fb7079d95cf72f9b70e4735c';
+           'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       vendor_info_res = await http.Response.fromStream(stream);
@@ -229,13 +229,13 @@ class WebServices extends ChangeNotifier {
       var upload = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/${id}/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/${id}/'));
       upload.fields['online'] = online_offline.toString();
       upload.fields['Lan'] = lan.toString();
       upload.fields['Log'] = log.toString();
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       update_online_offline_res = await http.Response.fromStream(stream);
@@ -283,10 +283,10 @@ class WebServices extends ChangeNotifier {
 
   Future Vendor_Profile_Api() async {
     var vendor_profile_res = await http.get(
-        Uri.encodeFull('http://192.168.43.231:8000/foodtruck-vendor/profile/'),
+        Uri.encodeFull('wingu1000.pythonanywhere.com/foodtruck-vendor/profile/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vendor_profile_res.statusCode == 200) {
       print(vendor_profile_res.body);
@@ -304,10 +304,10 @@ class WebServices extends ChangeNotifier {
 
   Future User_Profile_Api() async {
     user_profile_res = await http.get(
-        Uri.encodeFull('http://192.168.43.231:8001/foodtruck/users/me/'),
+        Uri.encodeFull('http://app.foodtruck.express/foodtruck/users/me/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (user_profile_res.statusCode == 200) {
       var body = jsonDecode(user_profile_res.body);
@@ -322,10 +322,10 @@ class WebServices extends ChangeNotifier {
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck-vendor/currentvendorslanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}/'),
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/currentvendorslanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}/'),
           headers: {
             "Accept": "application/json",
-            "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+            "Authorization":  'Token ${token['auth_token']}'
           });
 
       if (res.statusCode == 200) {
@@ -348,10 +348,10 @@ class WebServices extends ChangeNotifier {
   Future get_current_vendor_location() async {
     var current_vendor_location = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (current_vendor_location.statusCode == 200) {
       print(current_vendor_location.body);
@@ -377,10 +377,10 @@ class WebServices extends ChangeNotifier {
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck/currentuserlanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}&sub_id=${subscription_id}/'),
+              'http://app.foodtruck.express/foodtruck/currentuserlanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}&sub_id=${subscription_id}/'),
           headers: {
             "Accept": "application/json",
-            "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+            "Authorization":  'Token ${token['auth_token']}'
           });
 
       var body = jsonDecode(res.body);
@@ -416,10 +416,10 @@ Future get_vendor_rating(
     try {
       var res = await http.get(
           Uri.encodeFull(
-              'http://192.168.43.231:8000/foodtruck-vendor/rating/$vendor_id/'),
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/rating/$vendor_id/'),
           headers: {
             "Accept": "application/json",
-            "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+            "Authorization":  'Token ${token['auth_token']}'
           });
       if (res.statusCode == 200) {
                  var body = jsonDecode(res.body) as List;
@@ -440,10 +440,10 @@ Future get_vendor_rating(
 
   Future get_current_user_location() async {
     var current_user_location = await http.get(
-        Uri.encodeFull('http://192.168.43.231:8000/foodtruck/userlanlog/'),
+        Uri.encodeFull('http://app.foodtruck.express/foodtruck/userlanlog/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (current_user_location.statusCode == 200) {
       print(current_user_location.body);
@@ -462,10 +462,10 @@ Future get_vendor_rating(
   Future get_vender_subscription_id() async {
     var vender_subscription = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/user/subscription/'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/user/subscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       print(vender_subscription.body);
@@ -480,10 +480,10 @@ Future get_vendor_rating(
   Future get_vender_subscription_status(sub_id) async {
     var vender_subscription = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/subscription/status/sub_id=${sub_id.toString()}'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/subscription/status/sub_id=${sub_id.toString()}'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       var body = jsonDecode(vender_subscription.body);
@@ -496,10 +496,10 @@ Future get_vendor_rating(
   Future reactivate_subscription() async {
     var vender_subscription = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/createsubscription/'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/createsubscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
@@ -513,10 +513,10 @@ Future get_vendor_rating(
   Future cancel_subscription() async {
     var vender_subscription = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/cancelsubscription/'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/cancelsubscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
@@ -531,10 +531,10 @@ Future get_vendor_rating(
       {card_number, exp_month, exp_year, cvc, context}) async {
     var vender_subscription = await http.get(
         Uri.encodeFull(
-            'http://192.168.43.231:8000/foodtruck-vendor/addnewcard/card_number=${card_number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'),
+            'wingu1000.pythonanywhere.com/foodtruck-vendor/addnewcard/card_number=${card_number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c"
+          "Authorization":  'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
@@ -562,7 +562,7 @@ Future get_vendor_rating(
       var upload = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/token/login/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/token/login/'));
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
@@ -579,7 +579,7 @@ Future get_vendor_rating(
       var upload_loc = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/'));
       upload_loc.fields['Lan'] = locationValues.location_latitude.toString();
       upload_loc.fields['Log'] = locationValues.location_longitude.toString();
       upload_loc.fields['online'] = 'True';
@@ -598,13 +598,13 @@ Future get_vendor_rating(
     var locationValues = Provider.of<LocationService>(context, listen: false);
     try {
       var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://192.168.43.231:8000/foodtruck/userlanlog/${id}/'));
+          Uri.parse('http://app.foodtruck.express/foodtruck/userlanlog/${id}/'));
       upload.fields['online'] = 'true';
       upload.fields['Lan'] = locationValues.location_latitude.toString();
       upload.fields['Log'] = locationValues.location_longitude.toString();
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       var update_user_location_res = await http.Response.fromStream(stream);
@@ -627,13 +627,13 @@ Future get_vendor_rating(
       var upload = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/vendorlanlog/${id}/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/${id}/'));
       upload.fields['online'] = 'true';
       upload.fields['Lan'] = locationValues.location_latitude.toString();
       upload.fields['Log'] = locationValues.location_longitude.toString();
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       var update_vendor_location_res = await http.Response.fromStream(stream);
@@ -656,7 +656,7 @@ Future get_vendor_rating(
 
     try {
       var upload = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck/token/login/'));
+          Uri.parse('http://app.foodtruck.express/foodtruck/token/login/'));
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
@@ -676,7 +676,7 @@ Future get_vendor_rating(
     var locationValues = Provider.of<LocationService>(context, listen: false);
     try {
       var upload_loc = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck/userlanlog/'));
+          Uri.parse('http://app.foodtruck.express/foodtruck/userlanlog/'));
       upload_loc.fields['Lan'] = locationValues.location_latitude.toString();
       upload_loc.fields['Log'] = locationValues.location_longitude.toString();
       upload_loc.fields['online'] = 'True';
@@ -695,7 +695,7 @@ Future get_vendor_rating(
       {username, password, email, re_password, context}) async {
     try {
       var upload = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/users/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/users/'));
       upload.fields['username'] = username.toString();
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
@@ -776,7 +776,7 @@ Future get_vendor_rating(
       {username, password, email, re_password, context}) async {
     try {
       var upload = http.MultipartRequest(
-          'POST', Uri.parse('http://192.168.43.231:8000/foodtruck/users/'));
+          'POST', Uri.parse('http://app.foodtruck.express/foodtruck/users/'));
       upload.fields['username'] = username.toString();
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
@@ -826,7 +826,7 @@ Future get_vendor_rating(
                                 style: TextStyle(color: Colors.blue)),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(5.0) ,
                         child: body['non_field_errors'] == null
                             ? Icon(Icons.check, color: Colors.green)
                             : Text(body['non_field_errors'][0].toString(),
@@ -858,7 +858,7 @@ Future get_vendor_rating(
       var upload = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/token/login/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/token/login/'));
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
@@ -915,7 +915,7 @@ Future get_vendor_rating(
   Future Login_UserApi({password, email, context}) async {
     try {
       var upload = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck/token/login/'));
+          Uri.parse('http://app.foodtruck.express/foodtruck/token/login/'));
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
@@ -972,14 +972,14 @@ Future get_vendor_rating(
       {id, context, menu_description, menu_title, menu_price}) async {
     try {
       var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/menu/${id}/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
       upload.fields['menu_description'] = menu_description.toString();
       upload.fields['menu_title'] = menu_title.toString();
       upload.fields['menu_price'] = menu_price;
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1040,7 +1040,7 @@ Future get_vendor_rating(
       var upload = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/profile/${id}/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/profile/${id}/'));
       upload.fields['phone'] = phone.toString();
       upload.fields['business_name'] = business_name.toString();
       upload.fields['unique_detail'] = unique_detail;
@@ -1048,7 +1048,7 @@ Future get_vendor_rating(
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_profile_res = await http.Response.fromStream(stream);
       var body = json.decode(update_profile_res.body);
@@ -1107,7 +1107,7 @@ Future get_vendor_rating(
       menu_price}) async {
     try {
       var upload = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/menu/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/menu/'));
       var file = await http.MultipartFile.fromPath('menu_picture1', image1);
       var file2 = await http.MultipartFile.fromPath('menu_picture2', image2);
       var file3 = await http.MultipartFile.fromPath('menu_picture3', image3);
@@ -1120,7 +1120,7 @@ Future get_vendor_rating(
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var upload_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(upload_menu_res.body);
@@ -1172,9 +1172,9 @@ Future get_vendor_rating(
   Future Delete_Menu({id, context}) async {
     try {
       var upload = http.MultipartRequest('DELETE',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/menu/${id}/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1223,13 +1223,13 @@ Future get_vendor_rating(
       var upload = http.MultipartRequest(
           'PUT',
           Uri.parse(
-              'http://192.168.43.231:8000/foodtruck-vendor/profile/${id}/'));
+              'wingu1000.pythonanywhere.com/foodtruck-vendor/profile/${id}/'));
       var file = await http.MultipartFile.fromPath('pro_pic', pro_pic);
       upload.files.add(file);
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1282,7 +1282,7 @@ Future get_vendor_rating(
       {id, context, image1 = '', image2 = '', image3 = ''}) async {
     try {
       var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/menu/${id}/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
       var file = await http.MultipartFile.fromPath('menu_picture1', image1);
       var file2 = await http.MultipartFile.fromPath('menu_picture2', image2);
       var file3 = await http.MultipartFile.fromPath('menu_picture3', image3);
@@ -1292,7 +1292,7 @@ Future get_vendor_rating(
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1350,11 +1350,11 @@ Future PostRating(
       }) async {
     try {
       var upload = http.MultipartRequest('POST',
-          Uri.parse('http://192.168.43.231:8000/foodtruck-vendor/rating/'));
+          Uri.parse('wingu1000.pythonanywhere.com/foodtruck-vendor/rating/'));
       upload.fields['rate'] = rate.toString();
       upload.fields['lanlog'] = lanlog.toString();
       upload.headers['authorization'] =
-          "Token 41b835636ae90a02fb7079d95cf72f9b70e4735c";
+           'Token ${token['auth_token']}';
       final stream = await upload.send();
       var upload_rate_res = await http.Response.fromStream(stream);
       var body = json.decode(upload_rate_res.body);

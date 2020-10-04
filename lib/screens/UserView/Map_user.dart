@@ -200,7 +200,18 @@ class bodywidgetstate extends State<bodywidget> {
                                 child: Container(
                                   height: 120,
                                   child: Flexible(
-                                    child: Card(
+
+
+
+
+
+
+
+
+
+                                    
+                                    child:  Card(
+                                      color: Color(0xFF67b9fb).withOpacity(0.2),
                                       child: Container(
                                         width: 250,
                                         child: Column(
@@ -208,21 +219,9 @@ class bodywidgetstate extends State<bodywidget> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 8.0, right: 8),
-                                              child: ActionChip(
-                                                elevation: 2,
-                                                backgroundColor:
-                                                    Colors.lightBlue,
-                                                label: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      top: 5.0, bottom: 5),
-                                                  child: Text(
-                                                    'Focus View',
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                  ),
-                                                ),
-                                                onPressed: () async {
-                                                  GoogleMapController
+                                              child: InkWell(
+                                                onTap: ()async{
+                                         GoogleMapController
                                                       controller =
                                                       await _controller.future;
                                                   return controller
@@ -244,6 +243,38 @@ class bodywidgetstate extends State<bodywidget> {
                                                                             .Log),
                                                                   ))));
                                                 },
+                                                child: Container(
+                                                  height: 80,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(colors: [Color(0xff8acbff), Color(0xff67b9fb)],
+                                                    begin: Alignment.centerLeft,
+                                                    end: Alignment.centerRight,
+                                                    ),
+                                                    shape: BoxShape.circle,
+                                                     color: Colors.lightBlue,
+                                                  ),
+                                                  margin: const EdgeInsets.only(
+                                                      top: 5.0, bottom: 5),
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Focus\n View',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontFamily: 'Futura',
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold ,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 200,
+                                              child: Divider(
+                                                color: Colors.black,
+                                                indent: 5,
                                               ),
                                             ),
                                             Padding(
@@ -252,38 +283,31 @@ class bodywidgetstate extends State<bodywidget> {
                                                 right: 8,
                                               ),
                                               child: Text(
-                                                '${snapshots.data[index].distance}',
+                                                '${snapshots.data[index].distance} '+' MILES AWAY',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
+                                                    color: Colors.black,
                                                     fontSize: 20),
                                                 softWrap: false,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.fade,
                                               ),
                                             ),
-                                            Divider(
-                                             color: Color(0xFF67b9fb),
-                                              indent: 5,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(3.0),
-                                              child: Text(
-                                                'MILES AWAY',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color(0xFF67b9fb),
-                                                    fontSize: 14),
-                                                softWrap: false,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.fade,
-                                              ),
-                                            ),
+                                          
                                           ],
                                         ),
                                       ),
                                     ),
+
+
+
+
+
+
+
+
+
+
                                   ),
                                 ),
                               ),
