@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:foodtruck/main.dart';
 import 'package:foodtruck/screens/Login_SignupView/SIGNUP.dart';
 
+import 'Login_SignupView/login.dart';
+
 class SPLASH extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +25,7 @@ class SPLASHSTATE extends State<SPLASH> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) {
-          return SIGNUP();
+          return Login();
         },
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(

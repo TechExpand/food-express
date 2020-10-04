@@ -6,18 +6,10 @@ import 'package:foodtruck/Services/LocationService.dart';
 import 'package:foodtruck/Services/Network.dart';
 import 'package:foodtruck/Utils/provider_util.dart';
 import 'package:foodtruck/Utils/utils.dart';
-import 'package:foodtruck/screens/Login_SignupView/SIGNUP.dart';
 import 'package:foodtruck/screens/Login_SignupView/login.dart';
-import 'package:foodtruck/screens/SPLASH.dart';
-import 'package:foodtruck/screens/UserView/Map_user.dart';
-import 'package:foodtruck/screens/VendorView/MAp_vendor.dart';
-import 'package:foodtruck/screens/VendorView/VENDORSIGNUP_INFO.dart';
-import 'package:foodtruck/screens/VendorView/VENDORprofile.dart';
-import 'package:foodtruck/screens/VendorView/VendorMenuPage.dart';
 import 'package:foodtruck/Services/admob.dart';
-import 'package:http/http.dart' as http;
-import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
+import 'package:foodtruck/screens/SPLASH.dart';
 import 'package:provider/provider.dart';
 import 'package:statusbar/statusbar.dart';
 
@@ -93,7 +85,7 @@ class StartAppState extends State<StartApp> {
   Provider.of<AdmobService>(context, listen: false).instatitialAd.load();
   
 //Show instatitialAds every 5 minutes.
-   Timer.periodic(Duration(minutes: 1), (timer) {
+   Timer.periodic(Duration(minutes: 4), (timer) {
       Provider.of<AdmobService>(context, listen: false).instatitialAd.show();
     });
   }
@@ -118,6 +110,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Login();
+    return SPLASH();
   }
 }
