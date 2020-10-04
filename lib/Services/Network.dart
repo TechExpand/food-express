@@ -611,12 +611,13 @@ Future get_vendor_rating(
       var body = jsonDecode(update_user_location_res.body);
       if (update_user_location_res.statusCode == 200 ||
           update_user_location_res.statusCode == 201) {
-        return print('Location Updated');
+        return print('User Location Updated');
       } else {
         print('Location not updated');
       }
       return update_user_location_res;
     } catch (e) {
+      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
       print(e);
     }
   }
@@ -640,7 +641,7 @@ Future get_vendor_rating(
       var body = jsonDecode(update_vendor_location_res.body);
       if (update_vendor_location_res.statusCode == 200 ||
           update_vendor_location_res.statusCode == 201) {
-        return print('Location Updated');
+        return print('Vendor Location Updated');
       } else {
         print(update_vendor_location_res.body);
       }

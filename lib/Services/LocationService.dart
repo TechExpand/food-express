@@ -14,8 +14,6 @@ class LocationService with ChangeNotifier {
       Position position = await getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
       location_latitude = position.latitude;
       location_longitude = position.longitude;
-      print(location_latitude.toString());
-      print(location_longitude.toString());
       notifyListeners();
       return position;
     }catch(e){

@@ -55,9 +55,9 @@ class Map_vendorSampleState extends State<Map_vendorSample> {
                 ),
                 Divider(),
                 ListTile(
-                  title: Text('Profile'),
-                  leading: Icon(Icons.person_pin_circle),
-                )
+                  title: Text('ABOUT APP'),
+                  leading: Icon(Icons.info_outline),
+                ),
               ],
             ),
           ),
@@ -198,18 +198,8 @@ class bodywidgetstate extends State<bodywidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Container(
-                                  height: 120,
+                                  height: 140,
                                   child: Flexible(
-
-
-
-
-
-
-
-
-
-                                    
                                     child:  Card(
                                       color: Color(0xFF67b9fb).withOpacity(0.2),
                                       child: Container(
@@ -293,7 +283,7 @@ class bodywidgetstate extends State<bodywidget> {
                                                 overflow: TextOverflow.fade,
                                               ),
                                             ),
-                                          
+
                                           ],
                                         ),
                                       ),
