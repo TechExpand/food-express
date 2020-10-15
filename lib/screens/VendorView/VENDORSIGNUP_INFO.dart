@@ -30,11 +30,7 @@ class VENDORSIGNUP2 extends StatefulWidget {
 class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
   var business_name;
   var unique_detail;
-  var exp_month;
-  var card_number;
   var phone;
-  var exp_year;
-  var cvc;
   var detail;
   var pro_pic;
   final form_key = GlobalKey<FormState>();
@@ -258,142 +254,14 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                         ? Center(child: Text('No Image Selected'))
                         : Image.file(utils_consumer.selected_image),
                   ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Card Details', style: TextStyle(fontWeight: FontWeight.bold),),
-                  ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SizedBox(
-                      width: 480,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Card Number Required';
-                          } else {
-                            card_number = value;
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            labelText: 'Card Number',
-                            hintText: 'e.g 12345678910',
-                            labelStyle: TextStyle(
-                              color: Colors.black87,
-                            ),
-                            icon: Icon(
-                              Icons.credit_card,
-                              color: Colors.black87,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SizedBox(
-                      width: 480,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'expiring month is Required';
-                          } else {
-                            exp_month = value;
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            labelText: 'Expiring Month',
-                            hintText: 'e.g 3',
-                            labelStyle: TextStyle(
-                              color: Colors.black87,
-                            ),
-                            icon: Icon(
-                              Icons.date_range,
-                              color: Colors.black87,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SizedBox(
-                      width: 480,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'expiring year is Required';
-                          } else {
-                            exp_year = value;
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            labelText: 'Expiring Year',
-                            hintText: 'e.g 2021',
-                            labelStyle: TextStyle(
-                              color: Colors.black87,
-                            ),
-                            icon: Icon(
-                              Icons.date_range,
-                              color: Colors.black87,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: SizedBox(
-                      width: 480,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'cvc is Required';
-                          } else {
-                            cvc = value;
-                            return null;
-                          }
-                        },
-                        decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            labelText: 'CVC',
-                            hintText: 'e.g 000',
-                            labelStyle: TextStyle(
-                              color: Colors.black87,
-                            ),
-                            icon: Icon(
-                              FontAwesomeIcons.creditCard,
-                              color: Colors.black87,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                      ),
-                    ),
-                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: webservices_consumer.login_state == false
                         ?RaisedButton(
                       onPressed: () {
                 if (form_key.currentState.validate()) {
+                  try{
                   webservices_consumer.Login_SetState();
                         webservices_consumer.Vendor_InfoApi(
                           context:context,
@@ -402,11 +270,19 @@ class VENDORSIGNUP2STATE extends State<VENDORSIGNUP2> {
                           detail:detail,
                           phone:phone,
                           path: utils_consumer.selected_image.path,
-                          exp_month: exp_month,
-                          exp_year: exp_year,
-                          cvc: cvc,
-                          number: card_number,
-                        );
+                        );}
+                        catch(e){
+                           webservices_consumer.Login_SetState_Second();
+                          showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+                  Text('There was a Problem Encountered', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Text('All Images and Fields Are Required'),
+          ),
+          context: context);
+                        }
                       }},
 
                     color: Color(0xFF67b9fb),

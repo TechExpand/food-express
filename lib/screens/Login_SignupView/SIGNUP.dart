@@ -110,6 +110,7 @@ Widget UserSignUp(email, username, password, re_password, context, form_key) {
         flex: 20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(MediaQuery.of(context).size.height / 14),
@@ -212,13 +213,7 @@ Widget UserSignUp(email, username, password, re_password, context, form_key) {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[],
-              ),
-            ),
+
             Padding(
               padding: EdgeInsets.only(
                   right: MediaQuery.of(context).size.width / 8, bottom: 10),
@@ -348,6 +343,7 @@ Widget VendorSignUp(email, username, password, re_password, context, form_key) {
         flex: 20,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(MediaQuery.of(context).size.height / 14),
@@ -448,13 +444,6 @@ Widget VendorSignUp(email, username, password, re_password, context, form_key) {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8))),
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[],
               ),
             ),
             Padding(

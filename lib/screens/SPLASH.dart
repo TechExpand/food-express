@@ -17,7 +17,7 @@ class SPLASHSTATE extends State<SPLASH> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), go_to_home);
+    Future.delayed(Duration(seconds: 5), go_to_home);
   }
 
   go_to_home() {

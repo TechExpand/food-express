@@ -56,13 +56,9 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                             children: <Widget>[
                               // Adobe XD layer: 'background' (shape)
                               Container(
-                                height: 191.0,
-                                decoration: BoxDecoration(
-                                   image: DecorationImage(
-                          image: AssetImage('assets/images/foodtruck-bg.jpg')
-                          ),
-                                
-                                ),
+                                width: MediaQuery.of(context).size.width,
+                                height: 200.0,
+                                child: Image.asset('assets/images/foodtruck-bg.jpg', fit: BoxFit.fill,),
                               ),
                                InkWell(
                         onTap: () {
@@ -329,11 +325,12 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                             ),
                           ),
                           Divider(),
-                          webservices_consumer.login_state_third == false
+                          webservices_consumer.login_state_second == false
                               ? RaisedButton(
                                   onPressed: () {
-                                    if (_formkey.currentState.validate())
-                                      webservices_consumer.Login_SetState_third();
+                                    try{
+                        if (_formkey.currentState.validate())
+                                      webservices_consumer.Login_SetState_Second();
                                     webservices_consumer.Update_Profile_Details(
                                       phone: phone,
                                       business_name: business_name,
@@ -342,7 +339,23 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                                       context: context,
                                       id: widget.snapshot_profile_data.id,
                                     );
-                                  },
+                                    }
+                                    catch(e){
+                           webservices_consumer.Login_SetState_Second();
+                          showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+                  Text('There was a Problem Encountered', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Container(
+              margin:EdgeInsets.only(left:20),
+              child: Text('All Images and Fields Are Required')),
+          ),
+          context: context);
+                        }
+                                    
+                    },
                       
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     padding: EdgeInsets.all(0.0),
@@ -366,7 +379,7 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
         ),
       ),
     ),
-                                  )
+              )
                               : CircularProgressIndicator(),
                           Divider(),
                         ],

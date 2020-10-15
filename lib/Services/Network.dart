@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:foodtruck/Model/currentuserlocation.dart';
 import 'package:foodtruck/Model/currentvendorlocation.dart';
@@ -10,6 +9,7 @@ import 'package:foodtruck/Model/vendorprofile.dart';
 import 'package:foodtruck/Services/LocationService.dart';
 import 'package:foodtruck/screens/UserView/Map_user.dart';
 import 'package:foodtruck/screens/VendorView/MAp_vendor.dart';
+import 'package:foodtruck/screens/VendorView/SubscribePage.dart';
 import 'package:foodtruck/screens/VendorView/VENDORSIGNUP_INFO.dart';
 import 'package:foodtruck/screens/VendorView/VENDORprofile.dart';
 import 'package:foodtruck/screens/VendorView/VendorMenuPage.dart';
@@ -20,8 +20,6 @@ import 'package:provider/provider.dart';
 class WebServices extends ChangeNotifier {
   var vendor_signup_res;
   var token;
-  var location_token_vendor;
-  var location_token_user;
   var user_signup_res;
   var vendor_profile_res;
   var user_profile_res;
@@ -30,13 +28,15 @@ class WebServices extends ChangeNotifier {
   var location_menu_data = List();
   var vendor_info_res;
   var user_login_res;
+  var vendor_sub_res;
   var update_online_offline_res;
   var login_state = false;
   var login_state_second = false;
-    var login_state_third = false;
+  var login_state_third = false;
   var value;
   var isLoading = false;
-  String nextpage_menu = 'http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/';
+
+
 
   void Login_SetState() {
     if (login_state == false) {
@@ -47,7 +47,7 @@ class WebServices extends ChangeNotifier {
     notifyListeners();
   }
 
-  void Login_SetState_Second(){
+  void Login_SetState_Second() {
     if (login_state_second = false) {
       login_state_second = true;
     } else {
@@ -55,7 +55,6 @@ class WebServices extends ChangeNotifier {
     }
     notifyListeners();
   }
-
 
   void Login_SetState_third() {
     if (login_state == false) {
@@ -65,6 +64,7 @@ class WebServices extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 //"""GET REQUEST ""
 
   Future location_profile(id) async {
@@ -74,7 +74,7 @@ class WebServices extends ChangeNotifier {
               'http://wingu1000.pythonanywhere.com/foodtruck-vendor/locationprofile/${id.toString()}'),
           headers: {
             "Accept": "application/json",
-            "Authorization": 'Token ${token['auth_token']}'
+            "Authorization": '${token['auth_token']}'
           });
       if (res.statusCode == 200) {
         print(res.body);
@@ -101,7 +101,7 @@ class WebServices extends ChangeNotifier {
               'http://wingu1000.pythonanywhere.com/foodtruck-vendor/locationmenu/id=${id.toString()}/sub_id=${subscription_id.toString()}'),
           headers: {
             "Accept": "application/json",
-            "Authorization":  'Token ${token['auth_token']}'
+            "Authorization": '${token['auth_token']}'
           });
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body);
@@ -124,32 +124,28 @@ class WebServices extends ChangeNotifier {
     }
   }
 
+
   Future Vendor_Profile_Menu() async {
     try {
-      var res = await http.get(Uri.encodeFull('${nextpage_menu}'), headers: {
+      var res = await http.get(Uri.encodeFull('http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/'), headers: {
         "Accept": "application/json",
         "Authorization":  'Token ${token['auth_token']}'
       });
-      isLoading = true;
       if (res.statusCode == 200) {
         var body = res.body;
         var data = jsonDecode(body);
-        nextpage_menu = data['next'];
         var result = data['results'] as List;
         List<LocationMenuDetail> vendor_menu_objects = result
             .map((vendor_menu_json) =>
-                LocationMenuDetail.fromJson(vendor_menu_json))
+            LocationMenuDetail.fromJson(vendor_menu_json))
             .toList();
-
-        vendor_menu_data.addAll(vendor_menu_objects);
-        print(vendor_menu_data);
-        isLoading = false;
-        return vendor_menu_data;
+        return vendor_menu_objects;
       }
     } catch (e) {
       print(e);
     }
   }
+
 
   Future Vendor_InfoApi(
       {business_name,
@@ -157,16 +153,12 @@ class WebServices extends ChangeNotifier {
       detail,
       phone,
       path,
-      number,
-      exp_month,
-      exp_year,
-      cvc,
       context}) async {
     try {
       var upload = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/profile/number=${number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'));
+              'https://wingu1000.pythonanywhere.com/foodtruck-vendor/createprofile/'));
       var file = await http.MultipartFile.fromPath('pro_pic', path);
       upload.files.add(file);
       upload.fields['business_name'] = business_name.toString();
@@ -175,19 +167,139 @@ class WebServices extends ChangeNotifier {
       upload.fields['phone'] = phone.toString();
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       vendor_info_res = await http.Response.fromStream(stream);
-      print(vendor_info_res);
+      print(vendor_info_res.body);
+      print(vendor_info_res.body);
+      print(vendor_info_res.statusCode);
+      print(vendor_info_res.statusCode);
       var body = jsonDecode(vendor_info_res.body);
       if (vendor_info_res.statusCode == 200 ||
           vendor_info_res.statusCode == 201) {
         Login_SetState();
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Map_user();
-        }));
+        showDialog(
+            child: AlertDialog(
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              content: Container(
+                height: 350,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom:5.0),
+                      child: Icon(Icons.monetization_on, size: 90, color:  Color(0xFF67b9fb)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top:15, bottom: 15),
+                      width: 250,
+                      child: Text(
+                        'Would you like to upgrade your subscription which allow your ability to '
+                          'upload your menu items and see user locations',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    ButtonBar(
+                      children: <Widget>[
+                        Material(
+                          borderRadius: BorderRadius.circular(26),
+                          elevation: 2,
+                          child: Container(
+                            height: 40,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFFE60016)),
+                                borderRadius: BorderRadius.circular(26)
+                            ),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                  return Map_user();
+                                }));
+                              },
+                              color: Color(0xFFE60016),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                              padding: EdgeInsets.all(0.0),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(26)
+                                ),
+                                child: Container(
+                                  constraints: BoxConstraints(maxWidth: 190.0, minHeight: 53.0),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "No Thanks",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                          ),
+                        ),
+                        Material(
+                          borderRadius: BorderRadius.circular(26),
+                          elevation: 2,
+                          child: Container(
+                             height: 40,
+                            width: 120,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.green),
+                                borderRadius: BorderRadius.circular(26)
+                            ),
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                  return SubscribePage();
+                                }));
+                              },
+                              color: Colors.green,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
+                              padding: EdgeInsets.all(0.0),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(26)
+                                ),
+                                child: Container(
+                                  constraints: BoxConstraints(maxWidth: 190.0, minHeight: 53.0),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "Sign me up!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            context: context);
+
       } else if (vendor_info_res.statusCode == 400) {
         Login_SetState();
         showDialog(
@@ -215,6 +327,70 @@ class WebServices extends ChangeNotifier {
     }
   }
 
+
+
+
+
+  Future Vendor_Subscribe({
+        cvc,
+        expiry_year,
+        expiry_month,
+        card_number,
+        context
+      }) async {
+    try {
+      var upload = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/createsubscription/card_number=$card_number&exp_month=$expiry_month&exp_year=$expiry_year&cvc=$cvc/'));
+      upload.fields['subscription_id'] = '';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
+
+      final stream = await upload.send();
+      vendor_sub_res = await http.Response.fromStream(stream);
+      print(vendor_sub_res.body);
+       print(vendor_sub_res.body);
+        print(vendor_sub_res.body);
+         print(vendor_sub_res.body);
+      var body = jsonDecode(vendor_sub_res.body);
+      if (vendor_sub_res.statusCode == 200 ||
+          vendor_sub_res.statusCode == 201) {
+        Login_SetState();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Map_user();
+        }));
+      } else if (vendor_sub_res.statusCode == 400) {
+        Login_SetState();
+        showDialog(
+            child: AlertDialog(
+              title: Center(
+                child: Text('Check Credentials',
+                    style: TextStyle(color: Colors.blue)),
+              ),
+            ),
+            context: context);
+      }
+      return vendor_sub_res;
+    } catch (e) {
+      print(e);
+      Login_SetState();
+      showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+              Text('Working on it', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Text('There was a Problem Encountered'),
+          ),
+          context: context);
+    }
+  }
+
+
+
+
+
+
   Future Update_Vendor_to_Online_Offline({
     bool online_offline,
     lan,
@@ -234,8 +410,7 @@ class WebServices extends ChangeNotifier {
       upload.fields['Lan'] = lan.toString();
       upload.fields['Log'] = log.toString();
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       update_online_offline_res = await http.Response.fromStream(stream);
@@ -283,10 +458,11 @@ class WebServices extends ChangeNotifier {
 
   Future Vendor_Profile_Api() async {
     var vendor_profile_res = await http.get(
-        Uri.encodeFull('http://wingu1000.pythonanywhere.com/foodtruck-vendor/profile/'),
+        Uri.encodeFull(
+            'http://wingu1000.pythonanywhere.com/foodtruck-vendor/profile/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": 'Token ${token['auth_token']}'
         });
     if (vendor_profile_res.statusCode == 200) {
       print(vendor_profile_res.body);
@@ -307,7 +483,7 @@ class WebServices extends ChangeNotifier {
         Uri.encodeFull('http://app.foodtruck.express/foodtruck/users/me/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": 'Token ${token['auth_token']}'
         });
     if (user_profile_res.statusCode == 200) {
       var body = jsonDecode(user_profile_res.body);
@@ -325,7 +501,7 @@ class WebServices extends ChangeNotifier {
               'http://wingu1000.pythonanywhere.com/foodtruck-vendor/currentvendorslanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}/'),
           headers: {
             "Accept": "application/json",
-            "Authorization":  'Token ${token['auth_token']}'
+            "Authorization": '${token['auth_token'].toString()}',
           });
 
       if (res.statusCode == 200) {
@@ -336,8 +512,6 @@ class WebServices extends ChangeNotifier {
             .toList();
         notifyListeners();
         return vendor_current_location_objects;
-      } else {
-        throw 'failed';
       }
     } catch (e) {
       print(e);
@@ -351,7 +525,7 @@ class WebServices extends ChangeNotifier {
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": '${token['auth_token']}'
         });
     if (current_vendor_location.statusCode == 200) {
       print(current_vendor_location.body);
@@ -380,7 +554,7 @@ class WebServices extends ChangeNotifier {
               'http://app.foodtruck.express/foodtruck/currentuserlanlog/lan=${location_latitude}&log=${location_longtitude}&range_value=${range_value}&sub_id=${subscription_id}/'),
           headers: {
             "Accept": "application/json",
-            "Authorization":  'Token ${token['auth_token']}'
+            "Authorization": '${token['auth_token']}'
           });
 
       var body = jsonDecode(res.body);
@@ -406,29 +580,25 @@ class WebServices extends ChangeNotifier {
     }
   }
 
-
-
-Future get_vendor_rating(
-      {context,
-      vendor_id,
-     }) async {
-    var locationValues = Provider.of<LocationService>(context, listen: false);
+  Future get_vendor_rating({
+    context,
+    vendor_id,
+  }) async {
     try {
       var res = await http.get(
           Uri.encodeFull(
               'http://wingu1000.pythonanywhere.com/foodtruck-vendor/rating/$vendor_id/'),
           headers: {
             "Accept": "application/json",
-            "Authorization":  'Token ${token['auth_token']}'
+            "Authorization": 'Token ${token['auth_token']}'
           });
       if (res.statusCode == 200) {
-                 var body = jsonDecode(res.body) as List;
-          List<Rating> vendor_rating_objects = body
-              .map((vendor_rating_json) =>
-                  Rating.fromJson(vendor_rating_json))
-              .toList();
-          notifyListeners();
-          return vendor_rating_objects;
+        var body = jsonDecode(res.body) as List;
+        List<Rating> vendor_rating_objects = body
+            .map((vendor_rating_json) => Rating.fromJson(vendor_rating_json))
+            .toList();
+        notifyListeners();
+        return vendor_rating_objects;
       } else {
         throw 'failed';
       }
@@ -437,13 +607,12 @@ Future get_vendor_rating(
     }
   }
 
-
   Future get_current_user_location() async {
     var current_user_location = await http.get(
         Uri.encodeFull('http://app.foodtruck.express/foodtruck/userlanlog/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": '${token['auth_token']}'
         });
     if (current_user_location.statusCode == 200) {
       print(current_user_location.body);
@@ -465,7 +634,7 @@ Future get_vendor_rating(
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/user/subscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": 'Token ${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       print(vender_subscription.body);
@@ -483,7 +652,7 @@ Future get_vendor_rating(
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/subscription/status/sub_id=${sub_id.toString()}'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": '${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       var body = jsonDecode(vender_subscription.body);
@@ -499,7 +668,7 @@ Future get_vendor_rating(
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/createsubscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": '${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
@@ -516,7 +685,7 @@ Future get_vendor_rating(
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/cancelsubscription/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": '${token['auth_token']}'
         });
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
@@ -529,20 +698,41 @@ Future get_vendor_rating(
 
   Future Set_Default_Payment_Card(
       {card_number, exp_month, exp_year, cvc, context}) async {
-    var vender_subscription = await http.get(
+        try{
+             var vender_subscription = await http.get(
         Uri.encodeFull(
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/addnewcard/card_number=${card_number}&exp_month=${exp_month}&exp_year=${exp_year}&cvc=${cvc}/'),
         headers: {
           "Accept": "application/json",
-          "Authorization":  'Token ${token['auth_token']}'
+          "Authorization": 'Token ${token['auth_token']}'
         });
+        print(vender_subscription.body);
+        print(vender_subscription.body);
+        print(vender_subscription.body);
     if (vender_subscription.statusCode == 200) {
       Login_SetState();
       var body = jsonDecode(vender_subscription.body);
       return body;
-    } else {
-      throw 'failed to add default card';
     }
+        }catch(e){
+          print(e);
+          print(e);
+          print(e);
+          print(e);
+          print(e);
+           Login_SetState();
+      showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+                  Text('Working on it', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Text('There was a Problem Encountered'),
+          ),
+          context: context);
+    }
+        
+   
   }
 
 ////"""POST REQUEST ""
@@ -567,7 +757,7 @@ Future get_vendor_rating(
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
       var response = await http.Response.fromStream(stream);
-      location_token_vendor = json.decode(response.body);
+      token = json.decode(response.body);
     } catch (e) {
       print(e);
     }
@@ -585,7 +775,7 @@ Future get_vendor_rating(
       upload_loc.fields['online'] = 'True';
       upload_loc.fields['user'] = '';
       upload_loc.headers['authorization'] =
-          'Token ${location_token_vendor['auth_token']}';
+          'Token ${token['auth_token']}';
       final stream_loc = await upload_loc.send();
       var response_loc = await http.Response.fromStream(stream_loc);
       return print(response_loc.body);
@@ -597,14 +787,15 @@ Future get_vendor_rating(
   Future Update_User_Location({id, context}) async {
     var locationValues = Provider.of<LocationService>(context, listen: false);
     try {
-      var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://app.foodtruck.express/foodtruck/userlanlog/${id}/'));
+      var upload = http.MultipartRequest(
+          'PUT',
+          Uri.parse(
+              'http://app.foodtruck.express/foodtruck/userlanlog/${id}/'));
       upload.fields['online'] = 'true';
       upload.fields['Lan'] = locationValues.location_latitude.toString();
       upload.fields['Log'] = locationValues.location_longitude.toString();
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       var update_user_location_res = await http.Response.fromStream(stream);
@@ -617,7 +808,6 @@ Future get_vendor_rating(
       }
       return update_user_location_res;
     } catch (e) {
-      print('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
       print(e);
     }
   }
@@ -633,8 +823,7 @@ Future get_vendor_rating(
       upload.fields['Lan'] = locationValues.location_latitude.toString();
       upload.fields['Log'] = locationValues.location_longitude.toString();
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
 
       final stream = await upload.send();
       var update_vendor_location_res = await http.Response.fromStream(stream);
@@ -665,7 +854,7 @@ Future get_vendor_rating(
       print(response.body.toString());
       print(password.toString());
       print(email.toString());
-      location_token_user = json.decode(response.body);
+      token = json.decode(response.body);
       print(locationValues.location_latitude.toString());
       print(locationValues.location_longitude.toString());
     } catch (e) {
@@ -683,7 +872,7 @@ Future get_vendor_rating(
       upload_loc.fields['online'] = 'True';
       upload_loc.fields['user'] = '';
       upload_loc.headers['authorization'] =
-          'Token ${location_token_user['auth_token']}';
+          'Token ${token['auth_token']}';
       final stream_loc = await upload_loc.send();
       var response_loc = await http.Response.fromStream(stream_loc);
       return print(response_loc.body);
@@ -695,8 +884,10 @@ Future get_vendor_rating(
   Future Signup_VendorApi(
       {username, password, email, re_password, context}) async {
     try {
-      var upload = http.MultipartRequest('POST',
-          Uri.parse('http://wingu1000.pythonanywhere.com/foodtruck-vendor/users/'));
+      var upload = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/users/'));
       upload.fields['username'] = username.toString();
       upload.fields['password'] = password.toString();
       upload.fields['email'] = email.toString();
@@ -827,7 +1018,7 @@ Future get_vendor_rating(
                                 style: TextStyle(color: Colors.blue)),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(5.0) ,
+                        padding: const EdgeInsets.all(5.0),
                         child: body['non_field_errors'] == null
                             ? Icon(Icons.check, color: Colors.green)
                             : Text(body['non_field_errors'][0].toString(),
@@ -864,7 +1055,7 @@ Future get_vendor_rating(
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
       vendor_login_res = await http.Response.fromStream(stream);
-       token = json.decode(vendor_login_res.body);
+      token = json.decode(vendor_login_res.body);
       print(token["auth_token"]);
       if (vendor_login_res.statusCode == 200 ||
           vendor_login_res.statusCode == 201) {
@@ -921,7 +1112,7 @@ Future get_vendor_rating(
       upload.fields['email'] = email.toString();
       final stream = await upload.send();
       user_login_res = await http.Response.fromStream(stream);
-       token = json.decode(user_login_res.body);
+      token = json.decode(user_login_res.body);
       print(token["auth_token"]);
       print(user_login_res.statusCode.toString());
       if (user_login_res.statusCode == 200 ||
@@ -972,15 +1163,16 @@ Future get_vendor_rating(
   Future Update_Menu_Details(
       {id, context, menu_description, menu_title, menu_price}) async {
     try {
-      var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
+      var upload = http.MultipartRequest(
+          'PUT',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
       upload.fields['menu_description'] = menu_description.toString();
       upload.fields['menu_title'] = menu_title.toString();
       upload.fields['menu_price'] = menu_price;
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1048,8 +1240,7 @@ Future get_vendor_rating(
       upload.fields['detail'] = detail;
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_profile_res = await http.Response.fromStream(stream);
       var body = json.decode(update_profile_res.body);
@@ -1060,7 +1251,7 @@ Future get_vendor_rating(
             MaterialPageRoute(builder: (context) {
           return VENDORprofile();
         }));
-        Login_SetState_third();
+        Login_SetState_Second();
       } else if (update_profile_res.statusCode == 400 ||
           update_profile_res.statusCode == 500 ||
           update_profile_res.statusCode == 405) {
@@ -1071,7 +1262,7 @@ Future get_vendor_rating(
                   style: TextStyle(color: Colors.blue)),
             ),
             context: context);
-        Login_SetState_third();
+        Login_SetState_Second();
       } else if (update_profile_res.statusCode == 404) {
         showDialog(
             child: AlertDialog(
@@ -1079,7 +1270,7 @@ Future get_vendor_rating(
                   style: TextStyle(color: Colors.blue)),
             ),
             context: context);
-        Login_SetState_third();
+        Login_SetState_Second();
       }
 
       return update_profile_res;
@@ -1107,8 +1298,10 @@ Future get_vendor_rating(
       menu_description,
       menu_price}) async {
     try {
-      var upload = http.MultipartRequest('POST',
-          Uri.parse('http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/'));
+      var upload = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/'));
       var file = await http.MultipartFile.fromPath('menu_picture1', image1);
       var file2 = await http.MultipartFile.fromPath('menu_picture2', image2);
       var file3 = await http.MultipartFile.fromPath('menu_picture3', image3);
@@ -1117,26 +1310,24 @@ Future get_vendor_rating(
       upload.files.add(file3);
       upload.fields['menu_title'] = menu_title.toString();
       upload.fields['menu_description'] = menu_description.toString();
-      upload.fields['menu_price'] = menu_price.toString();
+      upload.fields['menu_price'] = '$menu_price';
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var upload_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(upload_menu_res.body);
-      print(upload_menu_res.body.toString());
+
       if (upload_menu_res.statusCode == 200 ||
           upload_menu_res.statusCode == 201) {
-        Navigator.pushReplacement(context,
+        Navigator.push(context,
             MaterialPageRoute(builder: (context) {
           return VendorMenuPage();
         }));
         Login_SetState();
       } else if (upload_menu_res.statusCode == 400 ||
           upload_menu_res.statusCode == 500 ||
-          upload_menu_res.statusCode == 405) {
-        print(body.toString());
+          upload_menu_res.statusCode == 405 || upload_menu_res.statusCode == 404) {
         showDialog(
             child: AlertDialog(
               content: Text('process unable to finish',
@@ -1154,8 +1345,14 @@ Future get_vendor_rating(
         Login_SetState();
       }
 
-      return upload_menu_res;
+      return body;
     } catch (e) {
+      print(e);
+      print(e);
+      print(e);
+      print(e);
+      print(e);
+      print(e);
       Login_SetState();
       showDialog(
           child: AlertDialog(
@@ -1166,30 +1363,31 @@ Future get_vendor_rating(
             content: Text('There was a Problem Encountered'),
           ),
           context: context);
-      print(e);
+     
     }
   }
 
   Future Delete_Menu({id, context}) async {
     try {
-      var upload = http.MultipartRequest('DELETE',
-          Uri.parse('http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      var upload = http.MultipartRequest(
+          'DELETE',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/$id/'));
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
-      var body = json.decode(update_menu_res.body);
+
       if (update_menu_res.statusCode == 200 ||
           update_menu_res.statusCode == 201 ||
           update_menu_res.statusCode == 204) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
           return VendorMenuPage();
         }));
         Login_SetState();
+
       } else if (update_menu_res.statusCode == 400 ||
           update_menu_res.statusCode == 500 ||
           update_menu_res.statusCode == 405) {
-        print(body.toString());
         Navigator.pop(context);
         showDialog(
             child: AlertDialog(
@@ -1198,24 +1396,31 @@ Future get_vendor_rating(
             ),
             context: context);
         Login_SetState();
+
       } else if (update_menu_res.statusCode == 404) {
         Navigator.pop(context);
         showDialog(
             child: AlertDialog(
-              content: Text('no response! try again',
-                  style: TextStyle(color: Colors.blue)),
+              content:  Text('no response! try again',
+                    style: TextStyle(color: Colors.blue)),
             ),
             context: context);
         Login_SetState();
-      }
 
-      return update_menu_res;
+      }
     } catch (e) {
       Login_SetState();
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return VendorMenuPage();
-      }));
-      print(e);
+      Navigator.pop(context);
+     showDialog(
+       context:context,
+        child: AlertDialog(
+          title: Center(
+            child:
+            Text('Working on it', style: TextStyle(color: Colors.blue)),
+          ),
+          content: Text('There was a Problem Encountered'),
+        ),
+      );
     }
   }
 
@@ -1229,8 +1434,7 @@ Future get_vendor_rating(
       upload.files.add(file);
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1282,8 +1486,10 @@ Future get_vendor_rating(
   Future Update_Menu_Images(
       {id, context, image1 = '', image2 = '', image3 = ''}) async {
     try {
-      var upload = http.MultipartRequest('PUT',
-          Uri.parse('http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
+      var upload = http.MultipartRequest(
+          'PUT',
+          Uri.parse(
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/menu/${id}/'));
       var file = await http.MultipartFile.fromPath('menu_picture1', image1);
       var file2 = await http.MultipartFile.fromPath('menu_picture2', image2);
       var file3 = await http.MultipartFile.fromPath('menu_picture3', image3);
@@ -1292,8 +1498,7 @@ Future get_vendor_rating(
       upload.files.add(file3);
       upload.fields['lanlog'] = '';
       upload.fields['user'] = '';
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var update_menu_res = await http.Response.fromStream(stream);
       var body = json.decode(update_menu_res.body);
@@ -1342,33 +1547,27 @@ Future get_vendor_rating(
     }
   }
 
-
-Future PostRating(
-      {context,
-      rate,
-      lanlog,
-      scaffoldKey
-      }) async {
+  Future PostRating({context, rate, lanlog, scaffoldKey}) async {
     try {
-      var upload = http.MultipartRequest('POST',
-          Uri.parse('http://http://wingu1000.pythonanywhere.com/foodtruck-vendor/rating/'));
+      var upload = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://http://wingu1000.pythonanywhere.com/foodtruck-vendor/rating/'));
       upload.fields['rate'] = rate.toString();
       upload.fields['lanlog'] = lanlog.toString();
-      upload.headers['authorization'] =
-           'Token ${token['auth_token']}';
+      upload.headers['authorization'] = 'Token ${token['auth_token']}';
       final stream = await upload.send();
       var upload_rate_res = await http.Response.fromStream(stream);
       var body = json.decode(upload_rate_res.body);
       print(upload_rate_res.body.toString());
       if (upload_rate_res.statusCode == 200 ||
           upload_rate_res.statusCode == 201) {
-                  Login_SetState_third();
+        Login_SetState_third();
         scaffoldKey.currentState.showSnackBar(new SnackBar(
             content: new Text(
           'You Have Rated this Vendor',
           textAlign: TextAlign.center,
         )));
- 
       } else if (upload_rate_res.statusCode == 400 ||
           upload_rate_res.statusCode == 500 ||
           upload_rate_res.statusCode == 405) {
@@ -1387,8 +1586,9 @@ Future PostRating(
             ),
             context: context);
         Login_SetState_third();
-      }}catch(e){
-         Login_SetState_third();
+      }
+    } catch (e) {
+      Login_SetState_third();
       showDialog(
           child: AlertDialog(
             title: Center(
@@ -1399,4 +1599,6 @@ Future PostRating(
           ),
           context: context);
       print(e);
-      }}}
+    }
+  }
+}

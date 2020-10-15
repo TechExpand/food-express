@@ -119,7 +119,7 @@ BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(0.5, 0.5)),
   var marker = Set<Marker>();
   var zoom_value = 12.0;
   var index_value;
-  var range_value = 5000.0;
+  var range_value = 50.0;
 
   @override
   Widget build(BuildContext context) {
@@ -193,8 +193,11 @@ BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(0.5, 0.5)),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/4),
+                  width: 250,
                   height: 100,
                   child: PageView.builder(
+                    controller: PageController(viewportFraction: 0.8),
                     onPageChanged: (index) async {
                       print(snapshots.data[index].Lan.toString());
                       GoogleMapController controller = await _controller.future;
@@ -328,7 +331,7 @@ BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(0.5, 0.5)),
                                                 overflow: TextOverflow.fade,
                                               ),
                                             ),
-                                          
+
                                           ],
                                         ),
                                       ),
@@ -376,8 +379,8 @@ BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(0.5, 0.5)),
                     ),
                     child: Slider(
                       value: range_value,
-                      min: 0,
-                      max: 10000,
+                      min: 0.0,
+                      max: 100,
                       divisions: 10,
                       label: '$range_value',
                       onChanged: (value) {

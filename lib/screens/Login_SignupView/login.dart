@@ -244,7 +244,7 @@ Widget UserLogin(email, password, context, form_key) {
                                   .then((value) => webservices_consumer
                                       .get_current_user_location()
                                       .then((value) => Timer.periodic(
-                                              Duration(minutes: 10), (timer) {
+                                              Duration(seconds: 5), (timer) {
                                             webservices_consumer
                                                 .Update_User_Location(
                                               id: value[0].id,

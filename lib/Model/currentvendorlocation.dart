@@ -4,7 +4,7 @@ class CurrentVendorlocation {
   String Log;
   bool online;
   int user;
-  int distance;
+  double distance;
 
   CurrentVendorlocation({this.id, this.Lan, this.Log, this.online, this.user, this.distance});
 

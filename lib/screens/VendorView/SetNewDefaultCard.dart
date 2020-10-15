@@ -50,12 +50,9 @@ class vendoraddmenustate extends State<vendoraddcard> {
                   children: <Widget>[
                     // Adobe XD layer: 'background' (shape)
                     Container(
-                      height: 191.0,
-                      decoration: BoxDecoration(
-                         image: DecorationImage(
-                          image: AssetImage('assets/images/foodtruck-bg.jpg')
-                          ),
-                      ),
+                      width: MediaQuery.of(context).size.width,
+                      height: 200.0,
+                      child: Image.asset('assets/images/foodtruck-bg.jpg', fit: BoxFit.fill,),
                     ),
  InkWell(
                         onTap: () {
@@ -264,7 +261,7 @@ class vendoraddmenustate extends State<vendoraddcard> {
                                         children: <Widget>[
                                           Text(value,
                                               style: TextStyle(
-                                                  color: Colors.lightBlueAccent, fontSize: 14)),
+                                                  fontSize: 14)),
                                           InkWell(
                                               onTap: () {
                                                 Navigator.push(context,

@@ -198,6 +198,8 @@ class bodywidgetstate extends State<bodywidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/4),
+                                  width: 250,
                                   height: 140,
                                   child: Flexible(
                                     child:  Card(
