@@ -1,9 +1,11 @@
+import 'dart:ffi';
+
 class CurrentUserlocation {
   int id;
   String Lan;
   String Log;
   bool online;
-  int distance;
+  double distance;
   int user;
 
   CurrentUserlocation({this.id, this.Lan, this.Log, this.online, this.user,this.distance});

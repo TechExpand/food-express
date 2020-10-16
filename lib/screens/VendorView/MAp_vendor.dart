@@ -381,7 +381,7 @@ BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(0.5, 0.5)),
                       value: range_value,
                       min: 0.0,
                       max: 100,
-                      divisions: 10,
+                      divisions: 20,
                       label: '$range_value',
                       onChanged: (value) {
                         setState(

@@ -96,7 +96,7 @@ class bodywidgetstate extends State<bodywidget> {
   var marker = Set<Marker>();
   var zoom_value = 12.0;
   var index_value;
-  var range_value = 5000.0;
+  var range_value = 50.0;
 
   @override
   Widget build(BuildContext context) {
@@ -170,10 +170,12 @@ class bodywidgetstate extends State<bodywidget> {
                 bottom: 8.0,
               ),
               child: Align(
-                alignment: Alignment.bottomLeft,
+                alignment: Alignment.bottomCenter,
                 child: Container(
+                  width: 250,
                   height: 100,
                   child: PageView.builder(
+                    controller: PageController(viewportFraction: 0.8),
                     onPageChanged: (index) async {
                       GoogleMapController controller = await _controller.future;
                       return controller.animateCamera(
@@ -198,7 +200,6 @@ class bodywidgetstate extends State<bodywidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width/4),
                                   width: 250,
                                   height: 140,
                                   child: Flexible(
@@ -262,7 +263,7 @@ class bodywidgetstate extends State<bodywidget> {
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(
+                                             SizedBox(
                                               width: 200,
                                               child: Divider(
                                                 color: Colors.black,
@@ -290,15 +291,6 @@ class bodywidgetstate extends State<bodywidget> {
                                         ),
                                       ),
                                     ),
-
-
-
-
-
-
-
-
-
 
                                   ),
                                 ),
@@ -343,9 +335,9 @@ class bodywidgetstate extends State<bodywidget> {
                     ),
                     child: Slider(
                       value: range_value,
-                      min: 0,
-                      max: 10000,
-                      divisions: 10,
+                      min: 0.0,
+                      max: 100,
+                      divisions: 20,
                       label: '$range_value',
                       onChanged: (value) {
                         setState(

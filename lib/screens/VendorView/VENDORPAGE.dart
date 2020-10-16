@@ -164,51 +164,14 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
                                     ),
                                   ),
                                 ),
-                                Padding(
+                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: Container(
                                     height: 30,
-                                    child: FutureBuilder(
-                                      future: webservices.get_vendor_rating(vendor_id:widget.id, context: context),
-                                      builder: (context, snapshot) {
-                                        var rate = 0;
-                                        if(snapshot.hasData){
-                                             if(snapshot.data.isEmpty){
-                                           return  Expanded(
-                                               child: SmoothStarRating(
-                                        allowHalfRating: false,
-                                        isReadOnly: true,
-                                        rating: 0,
-                                        size: 17,
-                                        color: Color(0xff67b9fb),
-                                ),
-                                             );
-                                           
-                                             }else if(snapshot.data == 'failed to get rating' || snapshot.data == 'failed'){
-                                       return Text('${snapshot.data}');
-                                             }else{
-                                               for(var index in snapshot.data){
-                                               rate = rate + index.rate;
-                                            }
-                                            var average_rate = rate/snapshot.data.length;
-                                             
-                                               
-                                           return    SmoothStarRating(
-                                        allowHalfRating: false,
-                                        isReadOnly: true,
-                                        rating: average_rate==null?0.0:average_rate,
-                                        size: 17,
-                                        color: Color(0xff67b9fb),
-                                );
-                                             }
-                                        }else{
-                                         return Text('Loading...', style: TextStyle(color: Color(0xff67b9fb), fontWeight: FontWeight.bold),) ;
-                                        }
-                                      
-                                      }
-                                    ),
+                                    child: VendorRating(webservices),
                                   ),
-                                ),
+                                )
+                                
                               ]),
                             )
                           ]),
@@ -300,13 +263,13 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
     var webservices = Provider.of<WebServices>(context, listen: false);
     return  Flexible(
       child: ExpansionTile(
-                            title: Text('Tap to Rate Vendors!'),
+                            title: Text('Tap to Rate this Vendor!'),
                             children: <Widget>[
                               Padding(
                              padding: const EdgeInsets.all(8.0),
                              child: SmoothStarRating(
                                         allowHalfRating: false,
-                                        size: 40,
+                                        size: 35,
                                         onRated: (value) {
                                     rate_value = value;
                                         },
@@ -320,10 +283,11 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
                                         style: TextStyle(color: Colors.black45),
                                       ),
                                     ),
-                                     Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child:  webservices.login_state_third == false
-                         ?RaisedButton.icon(
+                                         Consumer<WebServices>(
+              builder: (context, webservices_consumer, child) => Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: webservices_consumer.login_state == false
+                      ? RaisedButton.icon(
                            
                                     color: Colors.blue,
                                     onPressed: () {
@@ -342,8 +306,10 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
                                     label: Text(
                                       'Submit Rating',
                                       style: TextStyle(color: Colors.white),
-                                    )):CircularProgressIndicator()
-                              )
+                                    ))
+                      : CircularProgressIndicator()),
+            ),
+                              
                             ],
                           ),
     );
@@ -384,9 +350,9 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
                         return ListView.builder(
                           shrinkWrap: true,
                           physics: ClampingScrollPhysics(),
-                          itemCount: snapshot.data.length == 0 ? 0 : 10 + 1,
+                          itemCount: snapshot.data.length == 0 ? 0 : snapshot.data.length+1,
                           itemBuilder: (context, index) {
-                            return index == 10
+                            return index == snapshot.data.length
                                 ? InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -532,5 +498,51 @@ class VENDORPAGESTATE extends State<VENDORPAGE> {
                   child: CircularProgressIndicator(),
                 );
         });
+
+
+
+
   }
+
+   Widget VendorRating(webservices){
+          return FutureBuilder(
+                                      future: webservices.get_vendor_rating(vendor_id:widget.id, context: context),
+                                      builder: (context, snapshot) {
+                                        var rate = 0;
+                                        if(snapshot.hasData){
+                                             if(snapshot.data.isEmpty){
+                                           return  Expanded(
+                                               child: SmoothStarRating(
+                                        allowHalfRating: false,
+                                        isReadOnly: true,
+                                        rating: 0,
+                                        size: 17,
+                                        color: Color(0xff67b9fb),
+                                ),
+                                             );
+                                           
+                                             }else if(snapshot.data == 'failed to get rating' || snapshot.data == 'failed'){
+                                       return Text('${snapshot.data}');
+                                             }else{
+                                               for(var index in snapshot.data){
+                                               rate = rate + index.rate;
+                                            }
+                                            var average_rate = rate/snapshot.data.length;
+                                             
+                                               
+                                           return    SmoothStarRating(
+                                        allowHalfRating: false,
+                                        isReadOnly: true,
+                                        rating: average_rate==null?0.0:average_rate,
+                                        size: 17,
+                                        color: Color(0xff67b9fb),
+                                );
+                                             }
+                                        }else{
+                                         return Text('Loading...', style: TextStyle(color: Color(0xff67b9fb), fontWeight: FontWeight.bold),) ;
+                                        }
+                                      
+                                      }
+                                    );
+        }
 }

@@ -129,7 +129,7 @@ class VENDORprofilestate extends State<VENDORprofile> {
                                 return Switch(
                                   value: snapshot.data[0].online,
                                   onChanged: (value) {
-                                    setState(() {
+                                    
                                       if (snapshot.data[0].online == true) {
                                         webservices
                                             .Update_Vendor_to_Online_Offline(
@@ -141,7 +141,7 @@ class VENDORprofilestate extends State<VENDORprofile> {
                                           id: snapshot.data[0].id,
                                           online_offline_value: 'offline',
                                           color_value: Colors.red,
-                                        );
+                                        ).then((value) => setState((){}));
                                         webservices.Login_SetState();
                                       } else {
                                         webservices
@@ -154,10 +154,10 @@ class VENDORprofilestate extends State<VENDORprofile> {
                                           id: snapshot.data[0].id,
                                           online_offline_value: 'online',
                                           color_value: Colors.lightGreen,
-                                        );
+                                        ).then((value) => setState((){}));
                                         webservices.Login_SetState();
                                       }
-                                    });
+                                   
                                   },
                                 );
                               }

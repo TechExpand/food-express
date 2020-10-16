@@ -525,7 +525,7 @@ class WebServices extends ChangeNotifier {
             'http://wingu1000.pythonanywhere.com/foodtruck-vendor/vendorlanlog/'),
         headers: {
           "Accept": "application/json",
-          "Authorization": '${token['auth_token']}'
+          "Authorization": 'Token ${token['auth_token']}'
         });
     if (current_vendor_location.statusCode == 200) {
       print(current_vendor_location.body);
@@ -592,6 +592,10 @@ class WebServices extends ChangeNotifier {
             "Accept": "application/json",
             "Authorization": 'Token ${token['auth_token']}'
           });
+          print(res.statusCode);
+          print(res.statusCode);
+          print(res.statusCode);
+          print(res.statusCode);
       if (res.statusCode == 200) {
         var body = jsonDecode(res.body) as List;
         List<Rating> vendor_rating_objects = body
@@ -599,10 +603,11 @@ class WebServices extends ChangeNotifier {
             .toList();
         notifyListeners();
         return vendor_rating_objects;
-      } else {
-        throw 'failed';
-      }
+      } 
     } catch (e) {
+      print(e);
+      print(e);
+      print(e);
       return 'failed to get rating';
     }
   }
@@ -1552,7 +1557,7 @@ class WebServices extends ChangeNotifier {
       var upload = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'http://http://wingu1000.pythonanywhere.com/foodtruck-vendor/rating/'));
+              'http://wingu1000.pythonanywhere.com/foodtruck-vendor/rating/'));
       upload.fields['rate'] = rate.toString();
       upload.fields['lanlog'] = lanlog.toString();
       upload.headers['authorization'] = 'Token ${token['auth_token']}';

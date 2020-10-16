@@ -160,12 +160,29 @@ class VENDORprofileEdithstate extends State<VENDORprofileEdith> {
                           webservices_consumer.login_state_second == false
                               ? RaisedButton(
                               onPressed: () {
-                                webservices_consumer.Login_SetState_Second();
+                                try{
+                                    webservices_consumer.Login_SetState_Second();
                                 webservices_consumer.Update_Profile_Pic(
                                   pro_pic: utils_consumer.selected_menu_image1.path,
                                   context: context,
                                   id: widget.snapshot_profile_data.id,
-                                );
+                                ).then((value) => setState((){}));
+                                }
+                                catch(e){
+                           webservices_consumer.Login_SetState_Second();
+                          showDialog(
+          child: AlertDialog(
+            title: Center(
+              child:
+                  Text('There was a Problem Encountered', style: TextStyle(color: Colors.blue)),
+            ),
+            content: Container(
+              margin:EdgeInsets.only(left:20),
+              child: Text('An Image is Required')),
+          ),
+          context: context);
+                        }
+                              
                               },
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     padding: EdgeInsets.all(0.0),
